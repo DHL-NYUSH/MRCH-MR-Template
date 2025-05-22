@@ -17,11 +17,12 @@ namespace MRCH.Common.Interact
 
         [Title("Content to type", bold: false),
          InfoBox("Put the content you want to type in the text area, the content of the TMP component will be ignored",
-             InfoMessageType.Warning)]
+             InfoMessageType.Info)]//, visibleIfMemberName: "contentToTypeExist")]
         [HideLabel]
         [MultiLineProperty(8), SerializeField]
         protected string contentToType;
 
+        //private bool contentToTypeExist => contentToType.Length == 0;
         [SerializeField, Unit(Units.Second)] protected float typeSpeed = 0.1f;
 
         [Title("Setting"), DetailedInfoBox("It will start a new line in advance",
@@ -31,7 +32,6 @@ namespace MRCH.Common.Interact
         protected bool startNewLineWhenOverflow = true;
 
         [SerializeField, Space] protected bool typeOnEnable = false;
-
 
         [SerializeField, ShowIf("typeOnEnable")]
         protected bool onlyTypeForTheFirstTime = false;
@@ -51,7 +51,6 @@ namespace MRCH.Common.Interact
         protected virtual void Awake()
         {
             TryGetComponent<TextMeshProUGUI>(out textUI);
-
             TryGetComponent<TextMeshPro>(out text);
 
             if (textUI == null == (text == null)) //It means both are null or both are not null, I write it for fun lol
@@ -110,8 +109,57 @@ namespace MRCH.Common.Interact
             if (startNewLineWhenOverflow)
             {
                 var words = textToType.Split(' ');
-                foreach (var word in words)
+
+                for (int wordIndex = 0; wordIndex < words.Length; wordIndex++)
                 {
+                    var word = words[wordIndex];
+
+                    // Check if adding this word would cause overflow
+                    bool shouldAddNewLine = false;
+
+                    if (wordIndex > 0) // Don't check for the first word
+                    {
+                        string testText = GetCurrentText() + word;
+
+                        if (textUI)
+                        {
+                            string originalText = textUI.text;
+                            textUI.text = testText;
+                            textUI.ForceMeshUpdate();
+
+                            if (textUI.preferredWidth > textUI.rectTransform.rect.width)
+                            {
+                                shouldAddNewLine = true;
+                            }
+
+                            textUI.text = originalText;
+                        }
+
+                        if (text && !shouldAddNewLine)
+                        {
+                            string originalText = text.text;
+                            text.text = testText;
+                            text.ForceMeshUpdate();
+
+                            // For TextMeshPro 3D, check against bounds
+                            if (text.bounds.size.x > text.rectTransform.rect.width)
+                            {
+                                shouldAddNewLine = true;
+                            }
+
+                            text.text = originalText;
+                        }
+                    }
+
+                    // Add newline if needed (before typing the word)
+                    if (shouldAddNewLine)
+                    {
+                        if (text) text.text += "\n";
+                        if (textUI) textUI.text += "\n";
+                        yield return new WaitForSeconds(typeSpeed);
+                    }
+
+                    // Type each character of the word
                     foreach (var c in word)
                     {
                         if (text) text.text += c;
@@ -123,18 +171,12 @@ namespace MRCH.Common.Interact
                         yield return new WaitForSeconds(typeSpeed);
                     }
 
-                    if (text) text.text += " ";
-                    if (textUI) textUI.text += " ";
-
-                    // Check if the current text exceeds the bounds and will cause wrapping
-                    if (textUI && textUI.preferredWidth > textUI.rectTransform.rect.width)
+                    // Add space after word (except for the last word)
+                    if (wordIndex < words.Length - 1)
                     {
-                        textUI.text = textUI.text.TrimEnd() + "\n";
-                    }
-
-                    if (text && text.preferredWidth > text.rectTransform.rect.width)
-                    {
-                        text.text = text.text.TrimEnd() + "\n";
+                        if (text) text.text += " ";
+                        if (textUI) textUI.text += " ";
+                        yield return new WaitForSeconds(typeSpeed);
                     }
                 }
             }
@@ -156,6 +198,13 @@ namespace MRCH.Common.Interact
                 _isPlayed = true;
 
             _isPlaying = false;
+        }
+
+        private string GetCurrentText()
+        {
+            if (textUI) return textUI.text;
+            if (text) return text.text;
+            return "";
         }
     }
 }
