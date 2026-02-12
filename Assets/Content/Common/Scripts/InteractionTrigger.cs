@@ -61,7 +61,7 @@ namespace MRCH.Common.Interact
 
         #endregion
 
-        #region Lookat
+        #region LookAt
 
         [Title("LookAt Trigger"), Space, SerializeField]
         private bool useLookAtTrigger;
@@ -122,7 +122,8 @@ namespace MRCH.Common.Interact
 
         private GameObject _player;
         private Transform _playerTransform;
-        protected const int CheckRateFreq = 25;
+        private Collider _playerCollider; 
+        private const int CheckRateFreq = 25;
 
         #endregion
 
@@ -132,27 +133,45 @@ namespace MRCH.Common.Interact
         protected bool showGizmos = true;
 
         [InfoBox("This will print a log when any events are triggered", "debugMode"), SerializeField]
-        protected bool debugMode = false;
+        protected bool debugMode;
 
         #endregion
 
         #endregion
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             CheckAndInitSetting();
 
-            _player = GameObject.FindGameObjectWithTag("MainCamera");
-            if (_player == null) 
+            _player = GameObject.FindGameObjectWithTag("Player");
+            if (!_player)
+            {
                 Debug.LogError("No main camera found in the scene");
-            _playerTransform = _player.transform;
+                return;
+            }
 
+            _playerTransform = _player.transform;
+            _playerCollider = _player.GetComponent<Collider>();
+        }
+
+        protected virtual void Start()
+        {
             if (useEventsTriggers && useStartTrigger)
                 TriggerOnStart();
         }
 
         protected virtual void OnEnable()
         {
+            if (useColliderTrigger && _colliderTrigger && _playerCollider)
+            {
+                var closestOnTrigger = _colliderTrigger.ClosestPoint(_playerTransform.position);
+                var closestOnPlayer = _playerCollider.ClosestPoint(closestOnTrigger);
+                if ((closestOnTrigger - closestOnPlayer).sqrMagnitude < 0.0001f)
+                {
+                    OnTriggerEnter(_playerCollider);
+                }
+            }
+
             if (useEventsTriggers && useOnEnableTrigger)
                 TriggerOnEnable();
         }
@@ -179,9 +198,6 @@ namespace MRCH.Common.Interact
                     TriggerOnDistanceExit();
                     _alreadyInDistance = false;
                 }
-
-                if (useEventsTriggers && useUpdateTrigger)
-                    TriggerOnUpdate();
             }
 
             if (useLookAtTrigger)
@@ -208,6 +224,9 @@ namespace MRCH.Common.Interact
                     _alreadyLookAt = false;
                 }
             }
+
+            if (useEventsTriggers && useUpdateTrigger)
+                TriggerOnUpdate();
         }
 
         protected virtual void OnDisable()
@@ -223,6 +242,7 @@ namespace MRCH.Common.Interact
 
         public virtual void OnTriggerEnter(Collider other)
         {
+            if (!enabled) return; 
             if (!useColliderTrigger) return;
             if (!(other.CompareTag("Player") || other.CompareTag("MainCamera"))) return;
 
@@ -237,6 +257,7 @@ namespace MRCH.Common.Interact
 
         protected virtual void OnTriggerExit(Collider other)
         {
+            if (!enabled) return; 
             if (!useColliderTrigger) return;
             if (!other.CompareTag("Player")) return;
 
@@ -252,9 +273,9 @@ namespace MRCH.Common.Interact
             if (useColliderTrigger)
             {
                 _colliderTrigger = GetComponent<Collider>();
-                if (_colliderTrigger == null)
+                if (!_colliderTrigger)
                     Debug.LogError("Collider Trigger is enabled but no collider is attached to " + gameObject.name);
-                else if (_colliderTrigger.isTrigger == false)
+                else if (!_colliderTrigger.isTrigger)
                     Debug.LogWarning("YOU SHOULD PROBABLY TURN ON 'isTrigger' of the collider on " + gameObject.name);
 
                 if (onTriggerFirstEnter == null && onTriggerEnter == null && onTriggerExit == null)
@@ -272,7 +293,7 @@ namespace MRCH.Common.Interact
 
             if (useLookAtTrigger)
             {
-                if (onLookAtFirstEnter == null && onLookAtFirstEnter == null && onLookAtDistanceExit == null)
+                if (onLookAtFirstEnter == null && onLookAtEnter == null && onLookAtDistanceExit == null)
                     Debug.LogWarning("No events are assigned to LookAt Trigger on " + gameObject.name);
             }
 
@@ -293,6 +314,8 @@ namespace MRCH.Common.Interact
         {
             return Time.frameCount % frequency == 0;
         }
+
+        #region Gizmos - Editor
 
         protected void OnDrawGizmosSelected()
         {
@@ -318,13 +341,15 @@ namespace MRCH.Common.Interact
             }
         }
 
+        #endregion
+        
+
         #region TriggerEachEvents
 
         public virtual void TriggerOnTriggerFirstEnter()
         {
             if (debugMode)
-                if (debugMode)
-                    Debug.Log("onTriggerFirstEnter is triggered on " + gameObject.name);
+                Debug.Log("onTriggerFirstEnter is triggered on " + gameObject.name);
             onTriggerFirstEnter?.Invoke();
         }
 
@@ -401,7 +426,7 @@ namespace MRCH.Common.Interact
         public virtual void TriggerOnUpdate()
         {
             if (debugMode)
-                Debug.Log("onEnable is triggered on " + gameObject.name);
+                Debug.Log("onUpdate is triggered on " + gameObject.name);
             onUpdate?.Invoke();
         }
 
