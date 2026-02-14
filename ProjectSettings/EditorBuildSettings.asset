@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Content/Common/Scenes/InteractionSample DHL Outside.unity
     guid: 1351a33c18fa548468e319029a209315
-  - enabled: 1
+  - enabled: 0
     path: Assets/Content/Common/Scenes/MapTemplate/Ampier.unity
     guid: e614cf221c095054390c8994b8ca8b64
+  - enabled: 1
+    path: Assets/Content/Common/Scenes/InteractionSample - Magnolia.unity
+    guid: cbc83998639f03546b1bd843cebbe505
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 5a2f9b67c02658745b46c1890755fc21, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 004f060af04f0cc40a700fb1b81e30ad, type: 2}
@@ -18,3 +21,4 @@ EditorBuildSettings:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 3e391b066c68f9e46addbf4d79010076, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 7b0236f9e93fa7947b8689bd6cebdf57, type: 2}
     xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 53a6b2ace1a7b3141ab63f85ba90f3dc, type: 2}
+  m_UseUCBPForAssetBundles: 0

@@ -1,0 +1,143 @@
+卷 Work 的文件夹 PATH 列表
+卷序列号为 EA9B-E337
+D:\DHL\MRCH\MRCH-MR-TEMPLATE\ASSETS\CONTENT\COMMON\SCRIPTS
+│  Editor.meta
+│  InteractionTrigger.cs
+│  InteractionTrigger.cs.meta
+│  MapModel.cs
+│  MapModel.cs.meta
+│  MRCH.Common.asmdef
+│  MRCH.Common.asmdef.meta
+│  Objects.meta
+│  ReadMe.md
+│  ReadMe.md.meta
+│  Toast.meta
+│  Tools.meta
+│  Touch.meta
+│  UnityEventLibrary.cs
+│  UnityEventLibrary.cs.meta
+│  Wrappers.meta
+│  XRIRT.meta
+│  
+├─Editor
+│      Cube.prefab
+│      Cube.prefab.meta
+│      InteractionTriggerEditor.cs
+│      InteractionTriggerEditor.cs.meta
+│      MRCH.Common.Editor.asmdef
+│      MRCH.Common.Editor.asmdef.meta
+│      
+├─Objects
+│  │  Audio.meta
+│  │  Image.meta
+│  │  KeepFacingToCam.cs
+│  │  KeepFacingToCam.cs.meta
+│  │  MoveAndRotate.cs
+│  │  MoveAndRotate.cs.meta
+│  │  MRCH.Common.Objects.asmdef
+│  │  MRCH.Common.Objects.asmdef.meta
+│  │  ObjectToolset.cs
+│  │  ObjectToolset.cs.meta
+│  │  Text.meta
+│  │  
+│  ├─Audio
+│  │      AudioController.cs
+│  │      AudioController.cs.meta
+│  │      
+│  ├─Image
+│  │      ImageFade.cs
+│  │      ImageFade.cs.meta
+│  │      
+│  └─Text
+│          ShiningText.cs
+│          ShiningText.cs.meta
+│          TextFade.cs
+│          TextFade.cs.meta
+│          TmpTypewriter.cs
+│          TmpTypewriter.cs.meta
+│          
+├─Toast
+│  │  DefaultToastInstance.cs
+│  │  DefaultToastInstance.cs.meta
+│  │  Interface.meta
+│  │  ToastManager.cs
+│  │  ToastManager.cs.meta
+│  │  
+│  └─Interface
+│          IToastInstance.cs
+│          IToastInstance.cs.meta
+│          
+├─Tools
+│      EventBroadcaster.cs
+│      EventBroadcaster.cs.meta
+│      MRCH.Common.Tool.asmdef
+│      MRCH.Common.Tool.asmdef.meta
+│      MultiConditionEventManager.cs
+│      MultiConditionEventManager.cs.meta
+│      XROriginEditorControl.cs
+│      XROriginEditorControl.cs.meta
+│      
+├─Touch
+│      TouchableObject.cs
+│      TouchableObject.cs.meta
+│      TouchManager.cs
+│      TouchManager.cs.meta
+│      
+├─Wrappers
+│  │  Audio.meta
+│  │  Image.meta
+│  │  InteractionTrigger.cs
+│  │  InteractionTrigger.cs.meta
+│  │  KeepFacingToCam.cs
+│  │  KeepFacingToCam.cs.meta
+│  │  MoveAndRotate.cs
+│  │  MoveAndRotate.cs.meta
+│  │  ObjectToolset.cs
+│  │  ObjectToolset.cs.meta
+│  │  Text.meta
+│  │  Toast.meta
+│  │  Tool.meta
+│  │  Touch.meta
+│  │  UnityEventLibrary.cs
+│  │  UnityEventLibrary.cs.meta
+│  │  
+│  ├─Audio
+│  │      AudioController.cs
+│  │      AudioController.cs.meta
+│  │      
+│  ├─Image
+│  │      ImageFade.cs
+│  │      ImageFade.cs.meta
+│  │      
+│  ├─Text
+│  │      ShiningText.cs
+│  │      ShiningText.cs.meta
+│  │      TextFade.cs
+│  │      TextFade.cs.meta
+│  │      TmpTypewriter.cs
+│  │      TmpTypewriter.cs.meta
+│  │      
+│  ├─Toast
+│  │      ToastManager.cs
+│  │      ToastManager.cs.meta
+│  │      
+│  ├─Tool
+│  │      EventBroadcaster.cs
+│  │      EventBroadcaster.cs.meta
+│  │      MultiConditionEventManager.cs
+│  │      MultiConditionEventManager.cs.meta
+│  │      XROriginEditorControl.cs
+│  │      XROriginEditorControl.cs.meta
+│  │      
+│  └─Touch
+│          TouchableObject.cs
+│          TouchableObject.cs.meta
+│          TouchManager.cs
+│          TouchManager.cs.meta
+│          
+└─XRIRT
+        LazyFollow.cs
+        LazyFollow.cs.meta
+        MRCH.XRITK.asmdef
+        MRCH.XRITK.asmdef.meta
+        
