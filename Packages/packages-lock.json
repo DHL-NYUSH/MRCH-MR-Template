@@ -13,11 +13,6 @@
       "source": "git",
       "dependencies": {
         "com.unity.feature.development": "1.0.1",
-        "com.unity.xr.arcore": "5.1.0",
-        "com.unity.xr.arfoundation": "5.1.0",
-        "com.unity.xr.arkit": "5.1.0",
-        "com.unity.xr.openxr": "1.8.2",
-        "com.unity.textmeshpro": "3.0.6",
         "com.unity.xr.arcore": "5.2.2",
         "com.unity.xr.arfoundation": "5.2.2",
         "com.unity.xr.arkit": "5.2.2",
