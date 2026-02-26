@@ -5,7 +5,8 @@
         "Unity.TextMeshPro",
         "Immersal.Core",
         "Common.Tool",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "Bridge"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

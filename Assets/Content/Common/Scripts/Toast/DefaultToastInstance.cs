@@ -68,6 +68,9 @@ namespace MRCH.Common.Toast
             {
                 if (_canvasGroup) return _canvasGroup;
                 
+                // Guard against accessing destroyed object
+                if (!this) return null;
+                
                 if(!TryGetComponent(out _canvasGroup))
                     Debug.LogError($"No CanvasGroup found on {gameObject.name}. Ignore it when quit or destroying");
                 return _canvasGroup;

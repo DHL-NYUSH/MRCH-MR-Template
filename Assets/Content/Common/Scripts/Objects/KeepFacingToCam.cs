@@ -1,10 +1,13 @@
+using MRCH.Content.Common.Scripts.Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace MRCH.Common.Interact
 {
+    [DisallowMultipleComponent]
     public abstract class KeepFacingToCam : MonoBehaviour
     {
+        [DetailedInfoBox("This script is not obsolete but legacy", "You are recommended to use LazyFollow with: Follow => None, Rotate => Look At (w/ or w/o World Up) to reach the same function as this scripts with extra settings.")]
         protected Camera MainCam;
 
         protected bool FaceToCam;

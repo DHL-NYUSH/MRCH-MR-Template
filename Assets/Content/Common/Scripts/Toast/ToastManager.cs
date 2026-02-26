@@ -370,9 +370,12 @@ namespace MRCH.Common.Toast
         /// </summary>
         protected virtual void ResetInstanceVisual()
         {
-            var cg = _toastInstance?.CanvasGroup;
-            if(!cg) return;
-            
+            if (_toastInstance is not Object obj || !obj) return;
+            if (!_toastInstance.GameObj) return;
+    
+            var cg = _toastInstance.CanvasGroup;
+            if (!cg) return;
+    
             cg.alpha = 0f;
             _toastInstance.GameObj.SetActive(false);
         }

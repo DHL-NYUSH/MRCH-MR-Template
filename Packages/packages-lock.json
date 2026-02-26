@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "7c0f199fe0d3fc528024488ccd671e6c7b27745b"
+      "hash": "a9e27c03d411d2fca01cc7410c24c97cd77cb539"
     },
     "com.immersal.core": {
       "version": "https://github.com/immersal/imdk-unity.git",

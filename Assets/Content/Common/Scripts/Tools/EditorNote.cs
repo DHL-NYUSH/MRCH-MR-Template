@@ -1,0 +1,24 @@
+using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+namespace MRCH.Content.Common.Scripts.Tools
+{
+    public class EditorNote : MonoBehaviour
+    {
+#if UNITY_EDITOR
+        [SerializeField, ListDrawerSettings(ShowFoldout = false, ShowIndexLabels =  true, DraggableItems = false)]
+        private List<ReferenceObjectNote> notes = new();
+
+        [Serializable]
+        private class ReferenceObjectNote
+        {
+            [SerializeField]
+            private GameObject reference;
+            [SerializeField,TextArea(1,20)]
+            private string note;
+        }
+#endif
+    }
+}

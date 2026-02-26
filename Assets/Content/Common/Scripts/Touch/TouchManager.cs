@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,26 +16,25 @@ namespace MRCH.Common.Interact
         [Required,
          InfoBox("Assign this and all touchable Objects to a (special) layer", InfoMessageType.Error,
              "TouchableLayerAssigned")]
-        public LayerMask touchableLayer; // Assign this in the Inspector to include only the touchable objects
+        public LayerMask touchableLayer = 6; // Assign this in the Inspector to include only the touchable objects
 
         private bool TouchableLayerAssigned => touchableLayer == 0;
-
-        private static bool _isTouchable = true;
 
         [Space(10), Header("Universal Touch Event"), SerializeField]
         protected UnityEvent universalTouchEvent;
 
-        [SerializeField] protected UnityEvent universalReturnEvent;
-
-        [Title("Setting"), PropertyRange(1f, 300f), SerializeField]
+        [Title("Setting"), PropertyRange(1f, 60f), SerializeField]
         private float touchRange = 10f;
 
         private Camera _mainCam;
 
         [Space, SerializeField,
-         InfoBox("Enable this if you want other objects to be unable to interact after one is touched"),
+         InfoBox("Enable this if you want other objects to be unable to interact after one is touched.\n" +
+                 "Call Unlock() from any UnityEvent to re-enable interaction."),
          Tooltip("Enable this if you want other objects to be unable to interact after one is touched")]
         private bool disableTouchOfOtherObjects;
+
+        private bool _isLocked;
 
         [Space] public float clickInterval = 0.5f;
         private float _timeCnt = float.MaxValue;
@@ -41,14 +42,27 @@ namespace MRCH.Common.Interact
         public UnityEvent failedToClickEvent;
 
         // Input System actions
-        protected InputAction touchAction;
-        //[SerializeField] protected InputAction clickAction;
+        protected static InputAction SharedTouchAction;
+        private static int _refCount = 0;
+        
+        [Obsolete]
+        protected InputAction touchAction => SharedTouchAction;
 
         [Space, SerializeField] protected bool showGizmos = true;
 
-
+        private static readonly HashSet<uint> LayerUsed = new();
+        
         protected virtual void Start()
         {
+            for (var i = 0; i < 32; i++)
+            {
+                if ((touchableLayer.value & (1 << i)) != 0)
+                {
+                    if (!LayerUsed.Add((uint)i))
+                        Debug.LogWarning($"Layer {LayerMask.LayerToName(i)} is already used by another TouchManager! " +
+                                         $"This will cause duplicate touch events. ({gameObject.name})");
+                }
+            }
             if (Camera.main == null)
             {
                 Debug.LogError("Main Camera not found!!!");
@@ -58,22 +72,27 @@ namespace MRCH.Common.Interact
 
             if (touchableLayer == 0)
                 Debug.LogWarning("Please check if you forgot to assign the touchable layer on " + gameObject.name);
-
-            touchAction = new InputAction(binding: "<Touchscreen>/press");
-            touchAction.AddBinding("<Mouse>/leftButton");
-
-
-            touchAction.Enable();
         }
 
         protected virtual void OnEnable()
         {
-            touchAction?.Enable();
+            if (SharedTouchAction == null)
+            {
+                SharedTouchAction = new InputAction(binding: "<Touchscreen>/press");
+                SharedTouchAction.AddBinding("<Mouse>/leftButton");
+            }
+            _refCount++;
+            SharedTouchAction.Enable();
         }
 
         protected virtual void OnDisable()
         {
-            touchAction.Disable();
+            _refCount--;
+            if (_refCount <= 0)
+            {
+                SharedTouchAction?.Disable();
+                _refCount = 0;
+            }
         }
 
 
@@ -81,69 +100,67 @@ namespace MRCH.Common.Interact
         {
             _timeCnt += Time.deltaTime;
 
-            if (touchAction.WasPressedThisFrame())
-            {
-                Vector3 inputPosition;
+            if (!SharedTouchAction.WasPressedThisFrame()) return;
+            
+            Vector3 inputPosition;
 
-                // Check if the input is from touchscreen or mouse
-                if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            // Check if the input is from touchscreen or mouse
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            {
+                inputPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            }
+            else if (Mouse.current != null && Mouse.current.leftButton.isPressed)
+            {
+                inputPosition = Mouse.current.position.ReadValue();
+            }
+            else
+            {
+                return;
+            }
+
+            var ray = _mainCam.ScreenPointToRay(inputPosition);
+            
+            if (!Physics.Raycast(ray, out var hit, touchRange, touchableLayer)) return;
+            
+            var touchable = hit.transform.GetComponent<TouchableObject>();
+            if (touchable)
+            {
+                if(_isLocked) return;
+                
+                if (_timeCnt <= clickInterval)
                 {
-                    inputPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-                }
-                else if (Mouse.current != null && Mouse.current.leftButton.isPressed)
-                {
-                    inputPosition = Mouse.current.position.ReadValue();
-                }
-                else
-                {
+                    failedToClickEvent?.Invoke();
                     return;
                 }
 
-                var ray = _mainCam.ScreenPointToRay(inputPosition);
-                if (Physics.Raycast(ray, out var hit, touchRange, touchableLayer))
-                {
-                    var touchable = hit.transform.GetComponent<TouchableObject>();
-                    if (touchable)
-                    {
-                        if (_timeCnt <= clickInterval)
-                        {
-                            failedToClickEvent?.Invoke();
-                            return;
-                        }
-                        _timeCnt = 0f;
-                        if (touchable.isReturn)
-                        {
-                            universalTouchEvent?.Invoke();
-                            touchable.OnTouch();
+                _timeCnt = 0f;
 
-                            if (touchable.isReturn) OnReturn();
-                        }
-                        else
-                        {
-                            if (disableTouchOfOtherObjects && !_isTouchable) return;
+                if (disableTouchOfOtherObjects)
+                    _isLocked = true;
 
-                            if (disableTouchOfOtherObjects)
-                                _isTouchable = false;
-
-                            Debug.Log("Universal Touch/Click Event triggered");
-                            universalTouchEvent?.Invoke();
-                            touchable.OnTouch();
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning(hit.transform.name + " has no TouchableObject component");
-                    }
-                }
+                Debug.Log("Universal Touch/Click Event triggered");
+                universalTouchEvent?.Invoke();
+                touchable.OnTouch();
+            }
+            else
+            {
+                Debug.LogWarning(hit.transform.name + " has no TouchableObject component");
             }
         }
 
-        public virtual void OnReturn()
+        public void Lock()
         {
-            if (disableTouchOfOtherObjects)
-                _isTouchable = true;
-            Debug.Log("Universal Return Event triggered");
-            universalReturnEvent?.Invoke();
+            _isLocked = true;
+            Debug.Log("Locked Touch Object");
+        }
+        /// <summary>
+        /// Re-enables interaction after it was locked by disableTouchOfOtherObjects.
+        /// Wire this to any TouchableObject's onTouchEvent via UnityEvent in the Inspector.
+        /// </summary>
+        public void Unlock()
+        {
+            _isLocked = false;
+            Debug.Log("Touch interaction unlocked");
         }
 
         protected void OnDrawGizmosSelected()

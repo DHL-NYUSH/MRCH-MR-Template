@@ -15,6 +15,7 @@ namespace MRCH.Common.Tool
     /// Entire functionality is stripped from builds.
     /// </summary>
     [AddComponentMenu("")] // Hide abstract class from menu
+    [DisallowMultipleComponent]
     public abstract class XROriginEditorControl : MonoBehaviour
     {
 #if UNITY_EDITOR

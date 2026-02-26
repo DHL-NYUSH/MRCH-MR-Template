@@ -9,6 +9,7 @@ namespace MRCH.Common.Interact
     /// Drop-in replacement for XRI's LazyFollow, with no XR Interaction Toolkit dependency.
     /// </summary>
     [AddComponentMenu("MRCH-Interact/Object/Lazy Follow")]
+    [DisallowMultipleComponent]
     public class LazyFollow : MonoBehaviour
     {
         #region Enums

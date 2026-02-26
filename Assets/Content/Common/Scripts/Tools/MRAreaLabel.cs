@@ -1,0 +1,88 @@
+using Sirenix.OdinInspector;
+using UnityEditor;
+using UnityEngine;
+#if UNITY_EDITOR
+#endif
+
+namespace MRCH.Content.Common.Scripts.Tools
+{
+    /// <summary>
+    /// Displays a wireframe cube gizmo with a floating label in the Scene view.
+    /// Used in MR tool templates to help students locate learnable tool areas.
+    /// The label size/opacity responds to Unity's 3D Icons slider.
+    /// </summary>
+    public class MRAreaLabel : MonoBehaviour
+    {
+        [TitleGroup("Area Settings"), SerializeField, Tooltip("use the position of the game object, use a relative position if set to false.")]
+        private bool useTransform = true;
+
+        [TitleGroup("Area Settings"), SerializeField, HideIf("useTransform")]
+        private Vector3 center = Vector3.zero;
+            
+        [TitleGroup("Area Settings"), SerializeField, HideIf("useTransform")]
+        private Vector3 rotation = Vector3.zero;
+        
+        [TitleGroup("Area Settings"), SerializeField]
+        private Vector3 areaSize = new(1f, 1f, 1f);
+        
+        [Title("Area Label")]
+        [LabelText("Label Text")]
+        public string labelText = "Tool Area";
+
+        [TitleGroup("Appearance")]
+        [ColorPalette, SerializeField]
+        private Color gizmoColor = new Color(0f, 0.8f, 1f, 1f);
+
+        [TitleGroup("Appearance"), SerializeField, OnValueChanged("SetTextSize")]
+        private float setTextSize = 1f;
+        
+        [OnValueChanged("SyncTextSize")]
+        private static float _textSize = 1f;
+        
+        private void SetTextSize() => _textSize = setTextSize;
+        private void SyncTextSize() => setTextSize = _textSize;
+
+        [LabelText("Text Offset Y")]
+        [Range(0f, 2f)]
+        public float textOffsetY = 0.1f;
+
+        [LabelText("Text Font Size")]
+        [Range(8, 32)]
+        public int baseFontSize = 14;
+        
+
+#if UNITY_EDITOR
+        
+        private void OnDrawGizmos()
+        {
+            var pos = useTransform ? transform.position : transform.InverseTransformPoint(center);
+            var rot = useTransform ? transform.rotation : transform.rotation * Quaternion.Euler(rotation);
+
+            // --- Wireframe Cube ---
+            Gizmos.color = gizmoColor;
+            Gizmos.matrix = Matrix4x4.TRS(pos, rot, Vector3.one);
+            Gizmos.DrawWireCube(Vector3.zero, areaSize);
+            Gizmos.matrix = Matrix4x4.identity;
+
+            if(_textSize <= 0f)
+                return;
+            
+            var labelPos = pos
+                           + transform.up * (areaSize.y * 0.5f + textOffsetY);
+
+            var style = new GUIStyle
+            {
+                normal =
+                {
+                    textColor = gizmoColor * new Color(1, 1, 1, 1)
+                },
+                fontSize = Mathf.RoundToInt(baseFontSize * Mathf.Lerp(0.5f, 1f, _textSize)),
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold
+            };
+
+            Handles.Label(labelPos, labelText, style);
+        }
+#endif
+    }
+}

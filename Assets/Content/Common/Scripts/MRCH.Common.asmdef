@@ -8,7 +8,8 @@
         "Unity.InputSystem",
         "DOTween.Modules",
         "Common.Objects",
-        "Common.Tool"
+        "Common.Tool",
+        "Bridge"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
