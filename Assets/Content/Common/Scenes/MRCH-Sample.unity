@@ -1421,7 +1421,7 @@ GameObject:
   - component: {fileID: 486745796}
   - component: {fileID: 486745795}
   m_Layer: 5
-  m_Name: MultiTaskUI
+  m_Name: MultiTaskProgressUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1474,8 +1474,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1543,8 +1543,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -106.86554, y: 0}
+  m_SizeDelta: {x: 213.7311, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &504443914
 GameObject:
@@ -1905,6 +1905,7 @@ GameObject:
   m_Component:
   - component: {fileID: 569768475}
   - component: {fileID: 569768476}
+  - component: {fileID: 569768478}
   - component: {fileID: 569768477}
   m_Layer: 0
   m_Name: MultiTaskManager
@@ -2045,7 +2046,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 569768474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57ca14899cc6445c49cac3cba0b579ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 20f0d826d695a47609677e1975e555e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes:
+  - reference: {fileID: 569768476}
+    note: "MCEM is organized into two main sections: Tasks and Events.\n\nTasks are
+      individually defined units of progress. Each Task can stand alone or be chained
+      into a sequence by specifying a Prerequisite Task ID. Tasks without a prerequisite
+      (Task 1 and Task 3 here) are immediately triggerable from the start.\n\nTask
+      2 has Prerequisite Task ID = \"Task1\", meaning it cannot be completed until
+      Task 1 is marked complete. In this example, the object assigned to Task 2 is
+      physically activated by a Task 1 completion event \u2014 demonstrating how
+      tasks can drive scene state changes in sequence.\n\nEach Task fires a toast
+      notification on completion. When all Tasks are completed, a final \"Congratulations!\"
+      toast is sent. Because the Toast System replaces rather than stacks, the last
+      Task's toast will be immediately overwritten by the congratulations message.
+      To give the final Task toast time to display, trigger the congratulations toast
+      after a 1-second delay using a UnityEventLibrary sequence."
+  - reference: {fileID: 569768478}
+    note: The helper component supports string formatting with placeholders {0} and
+      {1}, allowing you to inject dynamic progress values (e.g. current/total task
+      count) directly into a TextMeshPro or TextMeshProUGUI component at runtime.
+--- !u!114 &569768478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569768474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c965e014f4144202bb81abebeb52e8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   conditionEventManager: {fileID: 569768476}
@@ -2476,6 +2508,7 @@ GameObject:
   - component: {fileID: 621821176}
   - component: {fileID: 621821175}
   - component: {fileID: 621821174}
+  - component: {fileID: 621821180}
   m_Layer: 6
   m_Name: 'Touchable Object: Set Animation Trigger'
   m_TagString: Untagged
@@ -2646,6 +2679,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621821172}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &621821180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621821172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f0d826d695a47609677e1975e555e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes:
+  - reference: {fileID: 9100000, guid: 0aedf25f727e70e49a877757dfece8f8, type: 2}
+    note: "This is the Animator component of this object. An Animator requires an
+      AnimatorController asset to function \u2014 the controller defines all possible
+      animation states and the rules for transitioning between them.\nDouble-click
+      the .controller file to open it in the Animator window. This controller has
+      two custom Animation States: \"still\" and \"MoveAround\", plus three built-in
+      states: Any State, Entry, and Exit.\nBuilt-in states overview:\n\n\xB7 Entry:
+      is the starting point when the Animator first activates. It transitions into
+      the default state automatically.\n\xB7 Exit: terminates the current state layer
+      and returns control to a parent state machine, if one exists. Not used in simple
+      single-layer setups.\n\xB7 Any State: is a shorthand transition source. A transition
+      from Any State can be triggered regardless of which state is currently active,
+      saving you from drawing the same transition from every individual state.\n\n----------------\n\"still\"
+      is a single-frame state \u2014 it acts as the idle pose of the object.\n\"MoveAround\"
+      is a multi-frame animation. You can inspect each keyframe in the Animation
+      window to see the position values changing over time, which produces the movement
+      when played.\n\nIn the Parameters panel (top-left of the Animator window),
+      there is one parameter: a Trigger type named \"Click\". A transition connects
+      Any State to MoveAround using this trigger as its condition. After MoveAround
+      finishes, it automatically transitions back to \"still\" to return to idle."
+  - reference: {fileID: 621821172}
+    note: On the Touchable Object, the touch event references this Animator and calls
+      Animator.SetTrigger("Click"). This fires the Click trigger, which satisfies
+      the Any State transition condition and causes the Animator to switch into the
+      MoveAround state.
 --- !u!1 &635229007
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,7 +2871,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   areaSize: {x: 2, y: 2, z: 2}
   labelText: Touch & Event Library & Toast
-  gizmoColor: {r: 0, g: 0.8, b: 1, a: 1}
+  gizmoColor: {r: 0.976, g: 0.792, b: 0.729, a: 1}
   setTextSize: 1
   textOffsetY: 0.1
   baseFontSize: 14
@@ -2905,7 +2976,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   areaSize: {x: 1, y: 1, z: 1}
   labelText: Look At Trigger
-  gizmoColor: {r: 0, g: 0.8, b: 1, a: 1}
+  gizmoColor: {r: 0.4, g: 1, b: 0.882, a: 1}
   setTextSize: 1
   textOffsetY: 0.1
   baseFontSize: 14
@@ -3532,7 +3603,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   areaSize: {x: 2, y: 2, z: 2}
   labelText: Collider Trigger, Move & Rotate
-  gizmoColor: {r: 0, g: 0.8, b: 1, a: 1}
+  gizmoColor: {r: 0.949, g: 0.549, b: 0.643, a: 1}
   setTextSize: 1
   textOffsetY: 0.1
   baseFontSize: 16
@@ -6225,7 +6296,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notes:
   - reference: {fileID: 1706373799}
-    note: 'Here is the Screen Touch sample. You can learn how to use '
+    note: This area demonstrates how to use touchable objects to trigger animations,
+      toggle object visibility, and play audio clips. It also integrates the MultiConditionEventManager
+      (MCEM), so a final outcome only fires once all defined requirements are met.
+  - reference: {fileID: 1706373799}
+    note: "TouchableManager \u2014 The touchable group uses the \"Touchable\" layer.
+      Every object that belongs to this group, or should participate in the UniversalTouchEvent,
+      must be assigned to that same layer.\n\n\"Disable Touch Of Other Objects\"
+      is enabled here. This means after any object in the group is interacted with,
+      the entire group is automatically locked (non-interactable) until TouchableManager.Unlock()
+      is called explicitly. In this example, clicking any sphere locks the group
+      and reveals an information UI with a return button."
+  - reference: {fileID: 1226118608}
+    note: 'Displays contextual information about the touched item (e.g. a description
+      or introduction). Replace the placeholder content with whatever is relevant
+      to your experience.
+
+      The return button does two things in order:
+
+
+      1.
+      Hides this UI.
+
+      2. Calls TouchableManager.Unlock() to re-enable the touchable
+      group.'
+  - reference: {fileID: 1765460982}
+    note: 'The button will do:
+
+      1. Hide the return UI.
+
+      2. Unlock the
+      Touchable Manager so the group can be touched again.'
+  - reference: {fileID: 569768474}
+    note: MultiConditionEventManager is attached to this object. See the Editor Note
+      on that component for full documentation on how tasks and completion events
+      are configured.
+  - reference: {fileID: 504443914}
+    note: "Touchable Object 1 \u2014 On touch:\n\n1. Plays the \"Click\" sound via
+      AudioSource.PlayOneShot() on its child AudioSource.\n2. Notifies the MCEM that
+      Task 1 is complete."
+  - reference: {fileID: 1220436272}
+    note: "Touchable Object 2 \u2014 On touch: \n\ntoggles the visibility of the
+      associated text object. "
+  - reference: {fileID: 621821172}
+    note: See the Editor Note on the object for details of it and Animation.
 --- !u!1 &1708806662
 GameObject:
   m_ObjectHideFlags: 0
@@ -6275,6 +6389,7 @@ GameObject:
   - component: {fileID: 1734665036}
   - component: {fileID: 1734665035}
   - component: {fileID: 1734665039}
+  - component: {fileID: 1734665040}
   m_Layer: 0
   m_Name: FollowCube
   m_TagString: Untagged
@@ -6392,13 +6507,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notes:
   - reference: {fileID: 1734665034}
-    note: "Nothing else; it's (annoying) followers who always keep a \"Target Offset\"
-      with you, enabled by the LazyFollow component.\n\nYou can configure Movement
-      Speed, Position Follow, and Rotation Follow parameters on the component. Most
-      parameters have tooltips \u2014 hover your mouse over them for details.\nAny
-      object can be a follower: use a WorldSpace Canvas with a TextMeshPro component
-      for floating UI labels, or attach LazyFollow to a mesh object for a companion-style
-      effect \u2014 like Navi from The Legend of Zelda."
+    note: "It's followers who always keep a \"Target Offset\" with you, enabled by
+      the LazyFollow component.\n\nYou can configure Movement Speed, Position Follow,
+      and Rotation Follow parameters on the component. Most parameters have tooltips
+      \u2014 hover your mouse over them for details.\nAny object can be a follower:
+      use a WorldSpace Canvas with a TextMeshPro component for floating UI labels,
+      or attach LazyFollow to a mesh object for a companion-style effect \u2014 like
+      Navi from The Legend of Zelda."
+--- !u!114 &1734665040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734665034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0061c6e602804ff4a71c5abbf2b26ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useTransform: 1
+  center: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0}
+  areaSize: {x: 0.5, y: 0.5, z: 0.5}
+  labelText: Camera Follower
+  gizmoColor: {r: 0.725, g: 0.863, b: 0.973, a: 1}
+  setTextSize: 1
+  textOffsetY: 0.1
+  baseFontSize: 14
 --- !u!1 &1765460982
 GameObject:
   m_ObjectHideFlags: 0
@@ -6738,8 +6874,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1892754231}
-  - component: {fileID: 1892754230}
   - component: {fileID: 1892754229}
+  - component: {fileID: 1892754230}
   m_Layer: 0
   m_Name: ColliderTriggerAndDistanceTrigger
   m_TagString: Untagged
@@ -6780,7 +6916,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20f0d826d695a47609677e1975e555e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notes: []
+  notes:
+  - reference: {fileID: 1892754228}
+    note: 'This area demonstrates two trigger types available on the Interaction
+      Trigger component: Collider Trigger and Distance Trigger. Both are enabled
+      on the diamond object''s Interaction in this sample.'
+  - reference: {fileID: 1536692017}
+    note: The text object starts with a default content of "You are good".
+  - reference: {fileID: 867085337}
+    note: '=>Distance Trigger behavior (repeatable):
+
+      When the player enters
+      the distance threshold, the text is replaced with "Are you trying to steal
+      the diamond?". When the player exits the area, the text resets to its default
+      content. This fires every time the player enters and exits.
+
+
+      =>Collider
+      Trigger behavior (one time only):
+
+      When the player physically enters
+      the diamond''s collider for the first time, three things happen in order:
+
+
+      1.
+      The text content is replaced with "You stole the diamond!".
+
+      2. The Interaction
+      Trigger component is disabled, so neither trigger will fire again.
+
+      3.
+      A toast notification is sent.
+
+
+      Because the Interaction Trigger is disabled
+      after the first collider entry, the distance trigger is also permanently deactivated
+      from that point forward. The stolen state is final until reset manually.'
 --- !u!4 &1892754231
 Transform:
   m_ObjectHideFlags: 0
@@ -6789,14 +6960,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892754228}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.965, y: -0.98, z: -8.903}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 867085338}
   - {fileID: 1536692018}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1959774577}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1897426273
 GameObject:
@@ -7019,6 +7190,7 @@ Transform:
   - {fileID: 771449884}
   - {fileID: 1734665038}
   - {fileID: 700177443}
+  - {fileID: 1892754231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1959774578
@@ -7686,4 +7858,3 @@ SceneRoots:
   - {fileID: 786826095}
   - {fileID: 1377195111}
   - {fileID: 1959774577}
-  - {fileID: 1892754231}

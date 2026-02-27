@@ -49,12 +49,19 @@ namespace MRCH.Content.Common.Scripts.Tools
         [LabelText("Text Font Size")]
         [Range(8, 32)]
         public int baseFontSize = 14;
+
+        [FoldoutGroup("Culling Distance"), ShowInInspector, ReadOnly]
+        private static float _cullingDistance = 60f;
+        [FoldoutGroup("Culling Distance"), Button]
+        private void SetCullingDistance(float distance) => _cullingDistance = distance;
         
 
 #if UNITY_EDITOR
         
         private void OnDrawGizmos()
         {
+            if(CullingGizmos()) return;
+            
             var pos = useTransform ? transform.position : transform.InverseTransformPoint(center);
             var rot = useTransform ? transform.rotation : transform.rotation * Quaternion.Euler(rotation);
 
@@ -82,6 +89,25 @@ namespace MRCH.Content.Common.Scripts.Tools
             };
 
             Handles.Label(labelPos, labelText, style);
+            
+            return;
+
+            bool CullingGizmos()
+            {
+#if UNITY_EDITOR
+                var sceneCamera = SceneView.currentDrawingSceneView?.camera;
+                if (!sceneCamera)
+                {
+                    Debug.Log("There is no scene view camera found in the scene.");
+                    return false;
+                }
+                var distance = Vector3.Distance(transform.position, sceneCamera.transform.position);
+                
+                return distance > _cullingDistance;
+#else
+                return false;
+#endif
+            }
         }
 #endif
     }

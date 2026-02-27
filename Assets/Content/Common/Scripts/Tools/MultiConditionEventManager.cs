@@ -1,36 +1,4 @@
-﻿// ============================================================================
-// MultiConditionEventManager.cs
-// Abstract base class for a multi-condition task/event manager.
-//
-// This is designed to be subclassed with a thin concrete wrapper:
-//
-//   [AddComponentMenu("MR Course/Condition Event Manager")]
-//   public class ConditionEventManager : MultiConditionEventManager { }
-//
-// Override virtual hooks to add custom logic without breaking core flow.
-//
-// Usage:
-//   1. Add the concrete subclass component to a GameObject.
-//   2. Define tasks with unique string IDs.
-//   3. From other components (e.g., InteractionTrigger), call
-//      CompleteTask("taskId") via UnityEvent to mark tasks as done.
-//   4. Wire up OnInitialized, OnAllTasksCompleted, OnProgressChanged,
-//      and per-task OnTaskCompleted events in the Inspector — no coding needed.
-//
-// Virtual Hooks (override in subclass):
-//   OnManagerInitialized()      — after dictionary is built and validated
-//   OnTaskCompleting(task)      — return false to block completion
-//   OnAfterTaskCompleted(task)  — after a task is marked complete
-//   OnAfterAllTasksCompleted()  — after all tasks are done
-//   OnAfterTaskReset(task)      — after a single task is reset
-//   OnAfterAllTasksReset()      — after ResetAll is called
-//
-// Debug Mode:
-//   Enable "Debug Mode" to see detailed Console logs and runtime status
-//   in the Inspector during Play Mode.
-// ============================================================================
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,7 +7,8 @@ using Sirenix.OdinInspector;
 
 namespace MRCH.Common.Tool
 {
-    // ─── Enums & Event Types ─────────────────────────────────────────────
+    
+    #region Task Class
 
     public enum InitializationTiming
     {
@@ -71,7 +40,7 @@ namespace MRCH.Common.Tool
 
         [HorizontalGroup("$TitleLabel/Row1", Width = 130)]
         [LabelWidth(95)]
-        [ToggleLeft]
+        [ToggleLeft][Tooltip("Events of the task can be re-trigger multiple times. You can get the times count by its CompletionCount. Re-trigger will not affect the completing progress.")]
         public bool allowRetrigger;
 
 #if UNITY_EDITOR
@@ -97,9 +66,9 @@ namespace MRCH.Common.Tool
         // ── Runtime state (not serialized) ──
 
         [NonSerialized,ShowInInspector, HideInEditorMode, ReadOnly] 
-        public bool IsCompleted;
+        public bool isCompleted;
         [NonSerialized] 
-        public int CompletionCount;
+        public int completionCount;
 
         // ── Odin helpers ──
 
@@ -120,20 +89,20 @@ namespace MRCH.Common.Tool
         }
 #endif
     }
-
-    // ─── Abstract Manager ────────────────────────────────────────────────
+    
+    #endregion
 
     [HideMonoScript]
     public abstract class MultiConditionEventManager : MonoBehaviour
     {
         // ── Settings ──
 
-        [FoldoutGroup("Settings"), PropertyOrder(-10)]
+        [FoldoutGroup("Settings"), PropertyOrder(20)]
         [LabelText("Initialize On")]
         [Tooltip("When to build the task dictionary and fire OnInitialized.")]
         public InitializationTiming initializeTiming = InitializationTiming.OnEnable;
 
-        [FoldoutGroup("Settings"), PropertyOrder(-10)]
+        [FoldoutGroup("Settings"), PropertyOrder(20)]
         [ToggleLeft]
         [Tooltip("Enable detailed logging in the Console and runtime status in the Inspector.")]
         public bool debugMode;
@@ -255,19 +224,19 @@ namespace MRCH.Common.Tool
                     string status;
                     if (task.HasPrerequisite &&
                         (!_taskDict.TryGetValue(task.prerequisiteTaskId, out var prereq) ||
-                         !prereq.IsCompleted))
+                         !prereq.isCompleted))
                     {
-                        status = "🔒 Locked";
+                        status = "Locked";
                     }
-                    else if (task.IsCompleted)
+                    else if (task.isCompleted)
                     {
-                        status = "✓ Completed";
-                        if (task.allowRetrigger && task.CompletionCount > 1)
-                            status += $" (×{task.CompletionCount})";
+                        status = "Completed";
+                        if (task.allowRetrigger && task.completionCount > 1)
+                            status += $" (×{task.completionCount})";
                     }
                     else
                     {
-                        status = "○ Pending";
+                        status = "Pending";
                     }
 
                     dict[task.id] = status;
@@ -323,8 +292,8 @@ namespace MRCH.Common.Tool
             foreach (var task in tasks)
             {
                 // Reset runtime state
-                task.IsCompleted = false;
-                task.CompletionCount = 0;
+                task.isCompleted = false;
+                task.completionCount = 0;
 
                 if (string.IsNullOrEmpty(task.id))
                 {
@@ -379,7 +348,7 @@ namespace MRCH.Common.Tool
             if (task.HasPrerequisite)
             {
                 if (!_taskDict.TryGetValue(task.prerequisiteTaskId, out var prereq) ||
-                    !prereq.IsCompleted)
+                    !prereq.isCompleted)
                 {
                     Log($"CompleteTask(\"{taskId}\") — blocked. " +
                         $"Prerequisite \"{task.prerequisiteTaskId}\" is not yet completed.");
@@ -388,12 +357,12 @@ namespace MRCH.Common.Tool
             }
 
             // ── Already completed ──
-            if (task.IsCompleted)
+            if (task.isCompleted)
             {
                 if (task.allowRetrigger)
                 {
-                    task.CompletionCount++;
-                    Log($"Task \"{taskId}\" re-triggered (×{task.CompletionCount}). " +
+                    task.completionCount++;
+                    Log($"Task \"{taskId}\" re-triggered (×{task.completionCount}). " +
                         "Events fired again, but progress unchanged.");
                     task.onTaskCompleted?.Invoke();
                 }
@@ -412,11 +381,11 @@ namespace MRCH.Common.Tool
             }
 
             // ── Complete ──
-            task.IsCompleted = true;
-            task.CompletionCount++;
+            task.isCompleted = true;
+            task.completionCount++;
             _completedCount++;
 
-            Log($"✓ Task \"{taskId}\" completed! Progress: {_completedCount}/{_taskDict.Count}");
+            Log($"Task \"{taskId}\" completed! Progress: {_completedCount}/{_taskDict.Count}");
 
             OnAfterTaskCompleted(task);
             task.onTaskCompleted?.Invoke();
@@ -443,14 +412,14 @@ namespace MRCH.Common.Tool
                 return;
             }
 
-            if (!task.IsCompleted)
+            if (!task.isCompleted)
             {
                 Log($"ResetTask(\"{taskId}\") — already pending, nothing to reset.");
                 return;
             }
 
-            task.IsCompleted = false;
-            task.CompletionCount = 0;
+            task.isCompleted = false;
+            task.completionCount = 0;
             _completedCount = Mathf.Max(0, _completedCount - 1);
             _allCompleted = false;
 
@@ -467,8 +436,8 @@ namespace MRCH.Common.Tool
         {
             foreach (var task in _taskDict.Values)
             {
-                task.IsCompleted = false;
-                task.CompletionCount = 0;
+                task.isCompleted = false;
+                task.completionCount = 0;
             }
 
             _completedCount = 0;
@@ -487,7 +456,7 @@ namespace MRCH.Common.Tool
         public bool IsTaskCompleted(string taskId)
         {
             if (_taskDict.TryGetValue(taskId, out var task))
-                return task.IsCompleted;
+                return task.isCompleted;
 
             LogWarning($"IsTaskCompleted(\"{taskId}\") — no task with this ID exists.");
             return false;
@@ -560,7 +529,7 @@ namespace MRCH.Common.Tool
             }
 
             if (issues == 0)
-                Debug.Log($"[Validate] ✓ All {tasks.Count} task(s) are valid.", this);
+                Debug.Log($"[Validate] All {tasks.Count} task(s) are valid.", this);
             else
                 Debug.LogWarning($"[Validate] Found {issues} issue(s). Check warnings above.", this);
         }
