@@ -96,7 +96,7 @@ namespace MRCH.Common.Toast
                 messageText.text = message;
             }
 
-            if (iconImage.sprite && !icon)
+            if (iconImage && iconImage.sprite && !icon)
             {
                 iconImage.enabled = true;
             }

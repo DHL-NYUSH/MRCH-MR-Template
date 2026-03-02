@@ -214,10 +214,8 @@ namespace MRCH.Common.Interact
 
         protected virtual void Update()
         {
-            if (useDistanceTrigger)
+            if (useDistanceTrigger && CheckRateLimiter(CheckRateFreq))
             {
-                if (!CheckRateLimiter(CheckRateFreq)) return;
-
                 if (InDistance(distance) && !_alreadyInDistance)
                 {
                     if (_firstDistanceEnter)
@@ -236,9 +234,8 @@ namespace MRCH.Common.Interact
                 }
             }
 
-            if (useLookAtTrigger)
+            if (useLookAtTrigger && CheckRateLimiter(CheckRateFreq))
             {
-                if (!CheckRateLimiter(CheckRateFreq)) return;
                 if (InLookAtRange() && !_alreadyLookAt)
                 {
                     if (Vector3.Angle(_playerTransform.forward,

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
 #if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 namespace MRCH.Content.Common.Scripts.Tools
@@ -31,7 +31,7 @@ namespace MRCH.Content.Common.Scripts.Tools
 
         [TitleGroup("Appearance")]
         [ColorPalette, SerializeField]
-        private Color gizmoColor = new Color(0f, 0.8f, 1f, 1f);
+        private Color gizmoColor = new(0f, 0.8f, 1f, 1f);
 
         [TitleGroup("Appearance"), SerializeField, OnValueChanged("SetTextSize")]
         private float setTextSize = 1f;
