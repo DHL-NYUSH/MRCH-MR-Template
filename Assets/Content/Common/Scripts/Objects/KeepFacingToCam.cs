@@ -1,34 +1,37 @@
+using MRCH.Content.Common.Scripts.Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace MRCH.Common.Interact
 {
+    [DisallowMultipleComponent]
     public abstract class KeepFacingToCam : MonoBehaviour
     {
-        protected Camera _mainCam;
+        [DetailedInfoBox("This script is not obsolete but legacy", "You are recommended to use LazyFollow with: Follow => None, Rotate => Look At (w/ or w/o World Up) to reach the same function as this scripts with extra settings.")]
+        protected Camera MainCam;
 
-        protected bool _faceToCam = false;
+        protected bool FaceToCam;
 
         [Title("Setting")] [SerializeField] protected bool lockYAxis = false;
         [SerializeField] protected bool faceToCamOnEnable = true;
 
         protected virtual void Start()
         {
-            _mainCam = Camera.main;
+            MainCam = Camera.main;
 
             if (GetComponent(typeof(MoveAndRotate)) != null)
             {
                 Debug.LogWarning($"{gameObject.name} has both 'TextFaceToCam' and 'Move and Rotate' component!");
             }
 
-            _faceToCam = faceToCamOnEnable;
+            FaceToCam = faceToCamOnEnable;
         }
 
         protected virtual void Update()
         {
-            if (!_mainCam || !_faceToCam) return;
+            if (!MainCam || !FaceToCam) return;
 
-            var directionToCamera = _mainCam.transform.position - transform.position;
+            var directionToCamera = MainCam.transform.position - transform.position;
             if (lockYAxis)
                 directionToCamera.y = 0;
             transform.rotation = Quaternion.LookRotation(-directionToCamera);
@@ -36,7 +39,7 @@ namespace MRCH.Common.Interact
 
         public virtual void SetFaceToCam(bool target)
         {
-            _faceToCam = target;
+            FaceToCam = target;
         }
     }
 }

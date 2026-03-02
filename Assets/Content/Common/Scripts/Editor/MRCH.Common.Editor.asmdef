@@ -1,8 +1,8 @@
 {
-    "name": "MRCH.Common.Editor",
-    "rootNamespace": "",
+    "name": "Common.Editor",
+    "rootNamespace": "MRCH",
     "references": [
-        "GUID:607a4fad64ed761429c98231b710064f"
+        "Common"
     ],
     "includePlatforms": [
         "Editor"

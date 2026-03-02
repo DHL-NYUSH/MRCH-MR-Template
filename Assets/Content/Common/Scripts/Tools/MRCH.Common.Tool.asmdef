@@ -1,8 +1,9 @@
 {
-    "name": "MRCH.Common.Tool",
-    "rootNamespace": "MRCH.Common.Tool",
+    "name": "Common.Tool",
+    "rootNamespace": "MRCH",
     "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

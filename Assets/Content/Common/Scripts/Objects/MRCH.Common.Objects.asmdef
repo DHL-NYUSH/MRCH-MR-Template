@@ -1,10 +1,12 @@
 {
-    "name": "MRCH.Common.Objects",
-    "rootNamespace": "",
+    "name": "Common.Objects",
+    "rootNamespace": "MRCH",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:2e7d06324bb40437f864b52eb770c3c5",
-        "GUID:359a6a2ddee85f941acba18ecbc11a7b"
+        "Unity.TextMeshPro",
+        "Immersal.Core",
+        "Common.Tool",
+        "Unity.Mathematics",
+        "Bridge"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

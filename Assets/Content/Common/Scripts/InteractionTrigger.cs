@@ -18,42 +18,50 @@ namespace MRCH.Common.Interact
     {
         #region Variables
 
-        #region Position
+        #region Collider Trigger
 
         [Title("Collider Trigger"), SerializeField]
+        [Tooltip("Enable trigger zone detection using a Collider component on this GameObject")]
         private bool useColliderTrigger;
-
-
+        
         private Collider _colliderTrigger;
 
         [Space, ShowIf("useColliderTrigger"), SerializeField, Indent]
+        [Tooltip("Fires once the first time a Player enters the trigger collider")]
         private UnityEvent onTriggerFirstEnter;
 
         [ShowIf("useColliderTrigger"), SerializeField, Indent]
+        [Tooltip("Fires every time a Player enters the trigger collider")]
         private UnityEvent onTriggerEnter;
 
         [ShowIf("useColliderTrigger"), SerializeField, Indent]
+        [Tooltip("Fires when a Player exits the trigger collider")]
         private UnityEvent onTriggerExit;
 
         private bool _firstColliderEnter = true;
 
         #endregion
 
-        #region Distance
+        #region Distance Trigger
 
         [Title("Distance Trigger"), Space, SerializeField]
+        [Tooltip("Enable proximity detection based on distance to the Player")]
         private bool useDistanceTrigger;
 
         [ShowIf("useDistanceTrigger"), SerializeField, Indent, Unit(Units.Meter)]
+        [Tooltip("Radius within which the Player triggers distance events")]
         protected float distance = 10f;
 
         [Space, ShowIf("useDistanceTrigger"), SerializeField, Indent]
+        [Tooltip("Fires once the first time the Player enters the distance range")]
         private UnityEvent onDistanceFirstEnter;
 
         [ShowIf("useDistanceTrigger"), SerializeField, Indent]
+        [Tooltip("Fires every time the Player enters the distance range")]
         private UnityEvent onDistanceEnter;
 
         [ShowIf("useDistanceTrigger"), SerializeField, Indent]
+        [Tooltip("Fires when the Player moves outside the distance range")]
         private UnityEvent onDistanceExit;
 
         private bool _firstDistanceEnter = true;
@@ -61,24 +69,31 @@ namespace MRCH.Common.Interact
 
         #endregion
 
-        #region Lookat
+        #region LookAt Trigger
 
         [Title("LookAt Trigger"), Space, SerializeField]
+        [Tooltip("Enable gaze detection — fires when the Player looks at this object")]
         private bool useLookAtTrigger;
 
         [ShowIf("useLookAtTrigger"), SerializeField, Indent, Unit(Units.Degree)]
+        [Tooltip("Max angle (degrees) between Player forward and direction to this object to count as 'looking at'")]
         protected float lookAtAngle = 25f;
 
-        [ShowIf("useLookAtTrigger"), SerializeField, Indent, Unit(Units.Meter)]
+        [ShowIf("useLookAtTrigger"), SerializeField, Indent, Unit(Units.Meter), MinValue(0f)]
+        [Tooltip("Max distance for look-at detection to be active. 0 means unlimited")]
+        [InfoBox("0 means unlimited", VisibleIf = "@lookAtDistance == 0")]
         protected float lookAtDistance;
 
         [Space, ShowIf("useLookAtTrigger"), SerializeField, Indent]
+        [Tooltip("Fires once the first time the Player looks at this object")]
         private UnityEvent onLookAtFirstEnter;
 
         [ShowIf("useLookAtTrigger"), SerializeField, Indent]
+        [Tooltip("Fires every time the Player looks at this object")]
         private UnityEvent onLookAtEnter;
 
         [ShowIf("useLookAtTrigger"), SerializeField, Indent]
+        [Tooltip("Fires when the Player moves outside the lookAt distance range")]
         private UnityEvent onLookAtDistanceExit;
 
         private bool _firstLookAtEnter = true;
@@ -86,34 +101,43 @@ namespace MRCH.Common.Interact
 
         #endregion
 
-        #region "unity events"
+        #region Unity Lifecycle Events
 
         [Title("Events Triggers"), Space, SerializeField]
+        [Tooltip("Enable Unity lifecycle event triggers (Start, OnEnable, Update, OnDisable)")]
         private bool useEventsTriggers;
 
         [Space, ShowIf("useEventsTriggers"), SerializeField, Indent]
+        [Tooltip("Fire an event on Start()")]
         private bool useStartTrigger;
 
         [ShowIf("@this.useEventsTriggers && this.useStartTrigger"), SerializeField, Indent(2)]
+        [Tooltip("Fires during Start()")]
         private UnityEvent onStart;
 
         [ShowIf("useEventsTriggers"), SerializeField, Indent]
+        [Tooltip("Fire an event on OnEnable()")]
         private bool useOnEnableTrigger;
 
         [ShowIf("@this.useEventsTriggers && this.useOnEnableTrigger"), SerializeField, Indent(2)]
+        [Tooltip("Fires during OnEnable()")]
         private UnityEvent onEnable;
 
         [ShowIf("useEventsTriggers"), SerializeField, Indent]
+        [Tooltip("Fire an event every Update() frame — use sparingly!")]
         private bool useUpdateTrigger;
 
         [ShowIf("@this.useEventsTriggers && this.useUpdateTrigger"), SerializeField, Indent(2),
          InfoBox("WAIT, ARE YOU SURE YOU NEED THIS??", InfoMessageType.Warning, "useUpdateTrigger")]
+        [Tooltip("Fires every Update() frame")]
         private UnityEvent onUpdate;
 
         [ShowIf("useEventsTriggers"), SerializeField, Indent]
+        [Tooltip("Fire an event on OnDisable()")]
         private bool useOnDisableTrigger;
 
         [ShowIf("@this.useEventsTriggers && this.useOnDisableTrigger"), SerializeField, Indent(2)]
+        [Tooltip("Fires during OnDisable()")]
         private UnityEvent onDisable;
 
         #endregion
@@ -122,47 +146,76 @@ namespace MRCH.Common.Interact
 
         private GameObject _player;
         private Transform _playerTransform;
-        protected const int CheckRateFreq = 25;
+        private Collider _playerCollider; 
+        
+        private bool _hasInitialized;
+        
+        /// <summary>
+        /// Distance and LookAt triggers are checked once every N frames to reduce CPU overhead.
+        /// 25 means checks run at ~2fps on a 50fps game, ~2.4fps on 60fps.
+        /// Lower = more responsive but more expensive. Collider triggers are physics-driven and unaffected.
+        /// </summary>
+        private const int CheckRateFreq = 25; 
 
         #endregion
 
         #region Setting
 
         [Space, Title("Setting", bold: false), SerializeField]
+        [Tooltip("Draw gizmos in Scene view for distance and lookAt ranges")]
         protected bool showGizmos = true;
 
         [InfoBox("This will print a log when any events are triggered", "debugMode"), SerializeField]
-        protected bool debugMode = false;
+        [Tooltip("Log a message to Console whenever any event is triggered")]
+        protected bool debugMode;
 
         #endregion
 
         #endregion
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             CheckAndInitSetting();
 
-            _player = GameObject.FindGameObjectWithTag("MainCamera");
-            if (_player == null) 
+            _player = GameObject.FindGameObjectWithTag("Player");
+            if (!_player)
+            {
                 Debug.LogError("No main camera found in the scene");
-            _playerTransform = _player.transform;
+                return;
+            }
 
+            _playerTransform = _player.transform;
+            _playerCollider = _player.GetComponent<Collider>();
+        }
+
+        protected virtual void Start()
+        {
             if (useEventsTriggers && useStartTrigger)
                 TriggerOnStart();
+            
+            _hasInitialized = true;
         }
 
         protected virtual void OnEnable()
         {
+            if (_hasInitialized && useColliderTrigger && _colliderTrigger && _playerCollider)
+            {
+                var closestOnTrigger = _colliderTrigger.ClosestPoint(_playerTransform.position);
+                var closestOnPlayer = _playerCollider.ClosestPoint(closestOnTrigger);
+                if ((closestOnTrigger - closestOnPlayer).sqrMagnitude < 0.0001f)
+                {
+                    OnTriggerEnter(_playerCollider);
+                }
+            }
+
             if (useEventsTriggers && useOnEnableTrigger)
                 TriggerOnEnable();
         }
 
         protected virtual void Update()
         {
-            if (useDistanceTrigger)
+            if (useDistanceTrigger && CheckRateLimiter(CheckRateFreq))
             {
-                if (!CheckRateLimiter(CheckRateFreq)) return;
-
                 if (InDistance(distance) && !_alreadyInDistance)
                 {
                     if (_firstDistanceEnter)
@@ -179,15 +232,11 @@ namespace MRCH.Common.Interact
                     TriggerOnDistanceExit();
                     _alreadyInDistance = false;
                 }
-
-                if (useEventsTriggers && useUpdateTrigger)
-                    TriggerOnUpdate();
             }
 
-            if (useLookAtTrigger)
+            if (useLookAtTrigger && CheckRateLimiter(CheckRateFreq))
             {
-                if (!CheckRateLimiter(CheckRateFreq)) return;
-                if (InDistance(lookAtDistance) && !_alreadyLookAt)
+                if (InLookAtRange() && !_alreadyLookAt)
                 {
                     if (Vector3.Angle(_playerTransform.forward,
                             (transform.position - _playerTransform.position).normalized) <= lookAtAngle)
@@ -202,12 +251,15 @@ namespace MRCH.Common.Interact
                         _alreadyLookAt = true;
                     }
                 }
-                else if (!InDistance(lookAtDistance) && _alreadyLookAt)
+                else if (!InLookAtRange() && _alreadyLookAt)
                 {
                     TriggerOnLookAtExit();
                     _alreadyLookAt = false;
                 }
             }
+
+            if (useEventsTriggers && useUpdateTrigger)
+                TriggerOnUpdate();
         }
 
         protected virtual void OnDisable()
@@ -220,12 +272,28 @@ namespace MRCH.Common.Interact
         {
             return Vector3.Distance(transform.position, _playerTransform.position) <= dist;
         }
+        
+        protected bool InLookAtRange()
+        {
+            if (lookAtDistance <= 0f) return true; // 0 = unlimited
+            if(!Application.isPlaying && Application.isEditor)
+                if(Camera.main)
+                    return Vector3.Distance(transform.position, Camera.main.transform.position) <= lookAtDistance;
+                else
+                    Debug.LogWarning("There is no main camera found in the scene.");
+                
+            return Vector3.Distance(transform.position, _playerTransform.position) <= lookAtDistance;
+        }
 
         public virtual void OnTriggerEnter(Collider other)
         {
+            if (!enabled) return; 
             if (!useColliderTrigger) return;
             if (!(other.CompareTag("Player") || other.CompareTag("MainCamera"))) return;
 
+            if(debugMode)
+                Debug.Log($"OnTriggerEnter: {other.name}, {other.tag}");
+            
             if (_firstColliderEnter)
             {
                 TriggerOnTriggerFirstEnter();
@@ -237,6 +305,7 @@ namespace MRCH.Common.Interact
 
         protected virtual void OnTriggerExit(Collider other)
         {
+            if (!enabled) return; 
             if (!useColliderTrigger) return;
             if (!other.CompareTag("Player")) return;
 
@@ -252,9 +321,9 @@ namespace MRCH.Common.Interact
             if (useColliderTrigger)
             {
                 _colliderTrigger = GetComponent<Collider>();
-                if (_colliderTrigger == null)
+                if (!_colliderTrigger)
                     Debug.LogError("Collider Trigger is enabled but no collider is attached to " + gameObject.name);
-                else if (_colliderTrigger.isTrigger == false)
+                else if (!_colliderTrigger.isTrigger)
                     Debug.LogWarning("YOU SHOULD PROBABLY TURN ON 'isTrigger' of the collider on " + gameObject.name);
 
                 if (onTriggerFirstEnter == null && onTriggerEnter == null && onTriggerExit == null)
@@ -272,7 +341,7 @@ namespace MRCH.Common.Interact
 
             if (useLookAtTrigger)
             {
-                if (onLookAtFirstEnter == null && onLookAtFirstEnter == null && onLookAtDistanceExit == null)
+                if (onLookAtFirstEnter == null && onLookAtEnter == null && onLookAtDistanceExit == null)
                     Debug.LogWarning("No events are assigned to LookAt Trigger on " + gameObject.name);
             }
 
@@ -294,6 +363,8 @@ namespace MRCH.Common.Interact
             return Time.frameCount % frequency == 0;
         }
 
+        #region Gizmos - Editor
+
         protected void OnDrawGizmosSelected()
         {
             if (!enabled || !showGizmos) return;
@@ -309,22 +380,59 @@ namespace MRCH.Common.Interact
 
             if (useLookAtTrigger)
             {
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(transform.position, lookAtDistance);
+                if (Camera.main != null)
+                {
+                    var camTransform = Camera.main.transform;
+                    var angle = Vector3.Angle(camTransform.forward,
+                        (transform.position - camTransform.position).normalized);
+        
+                    var isLookingAt = angle <= lookAtAngle;
+                    var isInRange = InLookAtRange(); // 0 = unlimited already handled
+
+                    Color stateColor;
+                    if (isLookingAt && isInRange)
+                        stateColor = Color.green;         // looking at + in range
+                    else if (isLookingAt || isInRange)
+                        stateColor = Color.blue;          // one condition met, not both
+                    else
+                        stateColor = Color.red;           // neither
+
+                    // Sphere range
+                    Gizmos.color = stateColor;
+                    Gizmos.DrawWireSphere(transform.position, lookAtDistance);
+
+                    // Line from camera to object
+                    Gizmos.color = stateColor;
+                    Gizmos.DrawLine(camTransform.position, transform.position);
+
+                    // Camera forward direction preview
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawLine(camTransform.position,
+                        camTransform.position + camTransform.forward * 3f);
+
+                    // Labels
+                    Handles.color = stateColor;
+                    Handles.Label((camTransform.position + transform.position) / 2,
+                        $"Angle: {angle:F2}°  {(isLookingAt ? "👀" : "")} {(isInRange ? "📏" : "")}");
+
 #if UNITY_EDITOR
-                var labelPosition = transform.position + Vector3.forward * lookAtDistance;
-                Handles.Label(labelPosition, "LookAt Trigger Distance Range");
+                    Handles.color = Color.white;
+                    Handles.Label(transform.position + Vector3.forward * lookAtDistance,
+                        "LookAt Trigger Distance Range");
 #endif
+                }
             }
         }
+
+        #endregion
+        
 
         #region TriggerEachEvents
 
         public virtual void TriggerOnTriggerFirstEnter()
         {
             if (debugMode)
-                if (debugMode)
-                    Debug.Log("onTriggerFirstEnter is triggered on " + gameObject.name);
+                Debug.Log("onTriggerFirstEnter is triggered on " + gameObject.name);
             onTriggerFirstEnter?.Invoke();
         }
 
@@ -401,7 +509,7 @@ namespace MRCH.Common.Interact
         public virtual void TriggerOnUpdate()
         {
             if (debugMode)
-                Debug.Log("onEnable is triggered on " + gameObject.name);
+                Debug.Log("onUpdate is triggered on " + gameObject.name);
             onUpdate?.Invoke();
         }
 

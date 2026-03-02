@@ -16,28 +16,27 @@ namespace MRCH.Common.Interact
         [CanBeNull, AssetsOnly] protected AudioSource TypeAudioSource;
 
         [Title("Content to type", bold: false),
-         InfoBox("Put the content you want to type in the text area, the content of the TMP component will be ignored",
-             InfoMessageType.Info)]//, visibleIfMemberName: "contentToTypeExist")]
+         InfoBox("Put the content you want to type in the text area, " +
+                 "the content of the TMP component will be ignored")]
         [HideLabel]
         [MultiLineProperty(8), SerializeField]
         protected string contentToType;
 
-        //private bool contentToTypeExist => contentToType.Length == 0;
         [SerializeField, Unit(Units.Second)] protected float typeSpeed = 0.1f;
 
         [Title("Setting"), DetailedInfoBox("It will start a new line in advance",
-             "It will start a new line in advance if the text overflows when typing the next word. It is recommended to enable" +
+             "It will start a new line in advance if the text overflows when typing the next word. It is recommended to enable " +
              "especially if it is in English-like language. However, if the width is short, it might be fine to disable it.")]
         [SerializeField]
         protected bool startNewLineWhenOverflow = true;
 
-        [SerializeField, Space] protected bool typeOnEnable = false;
+        [SerializeField, Space] protected bool typeOnEnable;
 
         [SerializeField, ShowIf("typeOnEnable")]
-        protected bool onlyTypeForTheFirstTime = false;
+        protected bool onlyTypeForTheFirstTime;
 
         [SerializeField, ShowIf("@typeOnEnable && onlyTypeForTheFirstTime")]
-        protected bool saveCrossScene = false;
+        protected bool saveCrossScene;
 
         [CanBeNull, SerializeField,
          InfoBox(
@@ -45,17 +44,22 @@ namespace MRCH.Common.Interact
          Space]
         protected AudioClip typeSound;
 
-        protected bool _isPlayed = false;
-        protected bool _isPlaying = false;
+        protected bool IsPlayed;
+        protected bool IsPlaying;
+        private Coroutine _typingCoroutine;
 
         protected virtual void Awake()
         {
-            TryGetComponent<TextMeshProUGUI>(out textUI);
-            TryGetComponent<TextMeshPro>(out text);
+            TryGetComponent(out textUI);
+            TryGetComponent(out text);
 
-            if (textUI == null == (text == null)) //It means both are null or both are not null, I write it for fun lol
+            if (!textUI && !text)
             {
-                Debug.LogWarning("Check the tmp/tmpUI component on " + gameObject.name);
+                Debug.LogWarning($"No TMP component found on {gameObject.name}");
+            }
+            else if (textUI && text)
+            {
+                Debug.LogWarning($"Both TMP and TMPUGUI found on {gameObject.name}, pick one.");
             }
 
             TryGetComponent(out TypeAudioSource);
@@ -65,43 +69,75 @@ namespace MRCH.Common.Interact
         {
             if (typeOnEnable)
             {
-                if ((PlayerPrefs.GetInt($"TextTypedOn{gameObject.name}On{SceneManager.GetActiveScene()}") == 1 ||
-                     _isPlayed) && onlyTypeForTheFirstTime)
+                // Reset partial state from a previous disable mid-type
+                IsPlaying = false;
+
+                var prefsKey = GetPlayerPrefsKey();
+
+                if ((PlayerPrefs.GetInt(prefsKey) == 1 || IsPlayed) && onlyTypeForTheFirstTime)
                 {
                     FinishTyping();
                 }
                 else
                 {
-                    StartCoroutine(TypeText(contentToType));
+                    StartTyping();
                 }
             }
         }
 
         protected virtual void OnDisable()
         {
-            _isPlaying = false;
+            if (_typingCoroutine != null)
+            {
+                StopCoroutine(_typingCoroutine);
+                _typingCoroutine = null;
+            }
+
+            IsPlaying = false;
         }
 
+        [Button, HideInEditorMode]
         public virtual void StartTyping()
         {
-            StartCoroutine(TypeText(contentToType));
+            StartTyping(contentToType);
+        }
+
+        public virtual void StartTyping(string content)
+        {
+            // Stop any existing typing coroutine before starting a new one
+            if (_typingCoroutine != null)
+            {
+                StopCoroutine(_typingCoroutine);
+                _typingCoroutine = null;
+                IsPlaying = false;
+            }
+
+            _typingCoroutine = StartCoroutine(TypeText(content));
         }
 
         public virtual void FinishTyping()
         {
+            if (_typingCoroutine != null)
+            {
+                StopCoroutine(_typingCoroutine);
+                _typingCoroutine = null;
+            }
+
+            IsPlaying = false;
+
             if (text) text.text = contentToType;
             if (textUI) textUI.text = contentToType;
         }
 
         protected virtual IEnumerator TypeText(string textToType)
         {
-            if (_isPlaying)
+            if (IsPlaying)
             {
-                Debug.LogWarning("Text has been typed on " + gameObject.name);
+                Debug.LogWarning("Text is already being typed on " + gameObject.name);
                 yield break;
             }
 
-            _isPlaying = true;
+            IsPlaying = true;
 
             if (text) text.text = "";
             if (textUI) textUI.text = "";
@@ -110,44 +146,35 @@ namespace MRCH.Common.Interact
             {
                 var words = textToType.Split(' ');
 
-                for (int wordIndex = 0; wordIndex < words.Length; wordIndex++)
+                for (var wordIndex = 0; wordIndex < words.Length; wordIndex++)
                 {
                     var word = words[wordIndex];
 
-                    // Check if adding this word would cause overflow
-                    bool shouldAddNewLine = false;
+                    var shouldAddNewLine = false;
 
-                    if (wordIndex > 0) // Don't check for the first word
+                    if (wordIndex > 0)
                     {
-                        string testText = GetCurrentText() + word;
+                        // Only measure the current line, not the full multi-line text
+                        var currentLine = GetCurrentLineText();
+                        var testLine = currentLine + word;
 
                         if (textUI)
                         {
-                            string originalText = textUI.text;
-                            textUI.text = testText;
-                            textUI.ForceMeshUpdate();
-
-                            if (textUI.preferredWidth > textUI.rectTransform.rect.width)
+                            // GetPreferredValues measures without mutating the component
+                            var preferredSize = textUI.GetPreferredValues(testLine);
+                            if (preferredSize.x > textUI.rectTransform.rect.width)
                             {
                                 shouldAddNewLine = true;
                             }
-
-                            textUI.text = originalText;
                         }
 
                         if (text && !shouldAddNewLine)
                         {
-                            string originalText = text.text;
-                            text.text = testText;
-                            text.ForceMeshUpdate();
-
-                            // For TextMeshPro 3D, check against bounds
-                            if (text.bounds.size.x > text.rectTransform.rect.width)
+                            var preferredSize = text.GetPreferredValues(testLine);
+                            if (preferredSize.x > text.rectTransform.rect.width)
                             {
                                 shouldAddNewLine = true;
                             }
-
-                            text.text = originalText;
                         }
                     }
 
@@ -193,11 +220,12 @@ namespace MRCH.Common.Interact
             }
 
             if (saveCrossScene)
-                PlayerPrefs.SetInt($"TextTypedOn{gameObject.name}On{SceneManager.GetActiveScene()}", 1);
+                PlayerPrefs.SetInt(GetPlayerPrefsKey(), 1);
             else
-                _isPlayed = true;
+                IsPlayed = true;
 
-            _isPlaying = false;
+            IsPlaying = false;
+            _typingCoroutine = null;
         }
 
         private string GetCurrentText()
@@ -205,6 +233,21 @@ namespace MRCH.Common.Interact
             if (textUI) return textUI.text;
             if (text) return text.text;
             return "";
+        }
+
+        /// <summary>
+        /// Returns only the text on the current (last) line, used for accurate overflow measurement.
+        /// </summary>
+        private string GetCurrentLineText()
+        {
+            var full = GetCurrentText();
+            var lastNewLine = full.LastIndexOf('\n');
+            return lastNewLine >= 0 ? full.Substring(lastNewLine + 1) : full;
+        }
+
+        private string GetPlayerPrefsKey()
+        {
+            return $"TextTypedOn{gameObject.name}On{SceneManager.GetActiveScene().name}";
         }
     }
 }
