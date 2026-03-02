@@ -1,4 +1,4 @@
-﻿using MRCH.Common.Toast.Interface;
+﻿using MRCH.Toast.Interface;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace MRCH.Common.Toast
+namespace MRCH.Toast
 {
     /// <summary>
     /// Default toast instance with TextMeshPro text and an optional icon Image.
@@ -17,7 +17,7 @@ namespace MRCH.Common.Toast
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
     [RequireComponent(typeof(RectTransform))]
-    [AddComponentMenu("MRCH/Common/Tool/Default Toast Instance")]
+    [AddComponentMenu("MRCH/Toast/Default Toast Instance")]
     public class DefaultToastInstance : MonoBehaviour, IToastInstance
     {
         #region References

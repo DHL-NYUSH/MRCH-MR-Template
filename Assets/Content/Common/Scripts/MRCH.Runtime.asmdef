@@ -1,12 +1,16 @@
 {
-    "name": "Editor",
+    "name": "Runtime",
     "rootNamespace": "MRCH",
     "references": [
-        "Common"
+        "Unity.TextMeshPro",
+        "Unity.Mathematics",
+        "UniTask",
+        "Immersal.Core",
+        "Unity.InputSystem",
+        "DOTween.Modules",
+        "Bridge"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

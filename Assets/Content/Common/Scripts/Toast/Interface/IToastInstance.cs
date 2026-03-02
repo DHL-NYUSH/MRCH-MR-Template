@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MRCH.Common.Toast.Interface
+namespace MRCH.Toast.Interface
 {
     /// <summary>
     /// Interface for toast instance components.

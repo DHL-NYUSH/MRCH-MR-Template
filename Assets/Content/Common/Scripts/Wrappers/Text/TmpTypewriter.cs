@@ -1,10 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers
 {
-    [AddComponentMenu("MRCH-Interact/Text/Simple TMP Typewriter")]
-    public class TmpTypewriter : MRCH.Common.Interact.TmpTypewriter
+    [AddComponentMenu("MRCH/Text/Simple TMP Typewriter")]
+    public class TmpTypewriter : Text.TmpTypewriter
     {
-
     }
 }
