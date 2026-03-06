@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
 
-namespace MRCH.Text
+namespace MRCH.TextOp
 {
     public abstract class TextFade : MonoBehaviour
     {

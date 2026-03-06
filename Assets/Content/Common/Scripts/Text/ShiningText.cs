@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace MRCH.Text
+namespace MRCH.TextOp
 {
     public abstract class ShiningText : MonoBehaviour
     {

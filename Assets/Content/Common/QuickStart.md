@@ -1,73 +1,109 @@
-# Quick Start for This Template for MRCH
+# Quick Start — MRCH Template
 
-## Tips Before You Start:
+## Before You Start
 
-1. The texts included in the project template are written in Markdown format. For an easier reading experience, consider using a Markdown reader or installing a Markdown extension in your programming IDE. With them you can see the structure of the Documentation.md and save your time.
+1. **Use a Markdown reader.** This file and `Documentation.md` are written in Markdown. A reader with a table of contents makes navigation much easier. Try [MarkText](https://github.com/marktext/marktext) (free), [Typora](https://typora.io/) ($15), or the Markdown preview in your IDE.
 
-2. It is recommended to use [GitHub Desktop](https://desktop.github.com/) for easier control of changes and updates from Shengyang’s side, or for team collaboration (further setup is needed).
+2. **Use [GitHub Desktop](https://desktop.github.com/)** for version control — it makes pulling updates from the template and collaborating with your team much easier.
 
-3. Please avoid changing anything, especially in the Assets/Content/Common/Scripts folder.
+3. **Do not modify anything inside `Assets/Content/Common/Scripts/`.** These are shared across all teams. If you need to customize a component's behavior, you can inherit from its abstract base class and override specific methods. See the *Extending Scripts* section in `Documentation.md` for guidance.
 
-4. Create your team folder under Assets/Content/[YOUR_UNIQUE_NAME]*. You can include subfolders like Models, Animations, Prefabs, Scenes, Scripts, etc., to keep everything organized. When submitting, place all your added content into your content folder, so it’s best to organize them as you go.
+4. **Create your team folder at `Assets/Content/[YOUR_TEAM_NAME]/`** and put all your work there — Models, Prefabs, Scenes, Scripts, etc. Keep it organized as you go; it makes submission much easier. (Your team name can be anything — just let Shengyang know it's you.)
 
-   [^[YOUR_UNIQUE_NAME\]]: It can be anything, your team nickname, the anime you all like... But remember to let Shengyang know it is you
+---
 
-   
+## Setting Up Your Scene
 
-## How to Start Building Your Virtual Experience on Cultural Heritage:
+1. Find your assigned map scene under `Assets/Content/Common/Scenes/MapTemplate/`.
+2. **Copy** it (do not move or cut) to `Assets/Content/[YOUR_TEAM_NAME]/Scenes/`.
+3. Rename it to something unique, then double-click to open it.
+4. You're ready to start building.
 
-1. Find your assigned map under the Assets/Content/Common/Scenes/MapTemplate folder.
-2. Copy (don’t move or cut!) it to Assets/Content/[YOUR_UNIQUE_NAME]/Scenes.
-3. Rename it to something unique, then double-click to open the scene.
-4. Let’s start creating!
+---
 
-## Add Your First Trigger Interaction
+## What's Already in the Scene
 
-------
+Your template scene comes pre-configured with:
 
-- Before you start, especially if you are responsible for managing the hierarchy or development, ensure you have a basic understanding of colliders, triggers, and rigidbodies.
+- **XR Origin** with the Immersal localizer and the `XR Origin Editor Control` component for testing in the Editor without a headset.
+- **EventBroadcaster** already wired to the Immersal SDK and Localizer — this is what allows components like `Move & Rotate`'s "After Localized" modes to work. You don't need to touch it.
+- **Toast Canvas** with a pre-configured `Toast Manager` and toast prefab — call `ShowToast("message")` from any UnityEvent to display a notification.
+- **Map Data with Occlusion** 
 
-- If not, these resources might help:
+---
 
-  - ##### [Colliders and Triggers in Unity — Understanding the Basics](https://christopherhilton88.medium.com/colliders-and-triggers-in-unity-understanding-the-basics-7192714f3440)
+## Testing in the Editor (Before Build)
 
-  - ##### [Unity Documentation - Collider](https://docs.unity3d.com/ScriptReference/Collider.html)
+The template includes `XR Origin Editor Control` on the XR Origin. In Play Mode:
 
-  - ##### Optional: [Unity Documentation - Rigidbody](https://docs.unity3d.com/ScriptReference/Rigidbody.html)
+| Control | Action |
+|---|---|
+| W / A / S / D | Move forward / left / back / right |
+| Q / E | Move down / up |
+| Shift | Hold for fast move |
+| I / K | Pitch up / down |
+| J / L | Yaw left / right |
+| Right-click + drag | Free-look with mouse |
 
-------
+A control hint overlay appears in the bottom-right corner of the Game view. Click **x** to collapse it.
 
-1. Right-click the XR Space and navigate to 3D Objects > Cube.
-2. Rename it to avoid confusion later.
-3. Disable the Mesh Renderer because we usually don’t need its visualization.
-4. **Check ‘Is Trigger’ under the Box Collider.**
-5. Click Add Component at the bottom, and navigate to **MRCH-Interact > Interaction Trigger**.
-6. Check ‘Use Collider Trigger’.
-7. Use the UnityEvent frames to create the actions that will occur when the event is triggered.
+---
 
-## Wait! What is a UnityEvent?
+## Adding Your First Interaction
 
-- Understanding UnityEvent is crucial for using this template effectively!
-- These materials may help you better understand UnityEvent:
-  - **[Unity Documentation - UnityEvents](https://docs.unity3d.com/Manual/UnityEvents.html)**
-  - **[UnityEvents Explained in 4 Minutes](https://www.youtube.com/watch?v=djW7g6Bnyrc)**
-  - Unity Forum - [UnityEvent, Where Have You Been All My Life?](https://discussions.unity.com/t/unityevent-where-have-you-been-all-my-life/577808) (lol)
+> **If you haven't used Unity colliders or triggers before**, read these first — they're short and essential:
+> - [Colliders and Triggers — Understanding the Basics](https://christopherhilton88.medium.com/colliders-and-triggers-in-unity-understanding-the-basics-7192714f3440)
+> - [Unity Docs — Collider](https://docs.unity3d.com/ScriptReference/Collider.html)
 
-OK... I believe you now have a basic idea of what to do... I hope so, hahaha!
+### Step 1 — Create a trigger zone
 
+1. In the Hierarchy, right-click **XR Space** → **3D Object → Cube**.
+2. Rename it to something descriptive (e.g. `TriggerZone_Entrance`).
+3. Disable the **Mesh Renderer** component — the cube only needs to work as an invisible zone.
+4. On the **Box Collider**, check **Is Trigger**.
 
+### Step 2 — Add the Interaction Trigger component
 
-## v1.3 Update Guidance
+1. With the cube selected, click **Add Component** at the bottom of the Inspector.
+2. Navigate to **MRCH → Interact → Interaction Trigger**, or search for it by name.
+3. Enable **Use Collider Trigger**.
 
-### Applying the New `EventBroadcaster` to Your Scene
+### Step 3 — Wire your UnityEvents
 
-1. In your scene, locate the `ImmersalSDK` component. Click **Add Component**, then navigate to `MRCH-Interact => Tool => Event Broadcaster`. It is recommended to add it to the **ImmersalSDK** for easier maintenance.
-2. Find the `Immersal SDK` component on the **ImmersalSDK** object. On the `On Initialization Complete()` event, add a new event. Drag the **Event Broadcaster** into this section, then select `EventBroadcaster.InitializedBroadcaster`.
-3. Next, go to the **ImmersalSDK/Localizer** object. Add a new event to `On First Successful Localization()`. Drag the **ImmersalSDK** object into this section and choose `EventBroadcaster.FirstLocalizedBroadcaster`.
-4. ***Optional:*** If desired (though not utilized in Shengyang's implementation), repeat this process for `ImmersalSDK => On Reset()` and `ImmersalSDK/Localizer => On Successful Localizations(int32[])`.
+The Interaction Trigger now shows three events: `On Trigger First Enter`, `On Trigger Enter`, and `On Trigger Exit`.
 
-### Applying the New `XR Origin Editor Controller` to Your Scene
+- Click **+** on the event you want to use.
+- Drag a GameObject from the Hierarchy into the object slot.
+- Use the dropdown to select the method to call.
 
-1. Locate the **XR Origin** in your scene.
-2. Click **Add Component**, then navigate to `MRCH-Interact => Tool => XR Origin Editor Controller`.
-3. You can now move using the WASD keys and rotate with the IJKL keys or mouse movement while holding down the right mouse button.
+> **New to UnityEvents?** These resources explain how they work:
+> - [Unity Docs — UnityEvents](https://docs.unity3d.com/Manual/UnityEvents.html)
+> - [UnityEvents Explained in 4 Minutes](https://www.youtube.com/watch?v=djW7g6Bnyrc)
+
+---
+
+## What Can I Do With This Template?
+
+See `Component_QuickRef.md` for a one-page summary of every available component. A few common patterns:
+
+| I want to… | Use |
+|---|---|
+| Trigger something when the player walks into a zone | `Interaction Trigger` → Collider Trigger |
+| Trigger something when the player gets close | `Interaction Trigger` → Distance Trigger |
+| Trigger something when the player looks at an object | `Interaction Trigger` → LookAt Trigger |
+| Let the player tap/click on a 3D object | `Touchable Manager` + `Touchable Object` |
+| Move an object to a position | `Move & Rotate` → `MoveForOnce()` |
+| Make a UI panel always face the player | `Lazy Follow` with Rotation: Look At With World Up |
+| Show a pop-up message | `Toast Manager` → `ShowToast("text")` |
+| Type out text character by character | `Simple TMP Typewriter` |
+| Track whether the player completed multiple steps | `Multi Condition Event Manager` |
+| Play audio with a fade-in | `Audio Controller` → `FadeInAudioToTargetVolume()` |
+| Toggle an object on/off from a trigger | `Object Toolset` → `ToggleObjectEnabled()` |
+
+---
+
+## Useful References
+
+- **`Documentation.md`** — full reference for every component, all Inspector fields, and public methods
+- **`Component_QuickRef.md`** — one-page component lookup with Add Component paths
+- **`ReleaseNotes.md`** — version history and changelog

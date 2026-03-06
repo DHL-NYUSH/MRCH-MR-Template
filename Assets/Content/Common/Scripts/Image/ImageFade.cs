@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MRCH.Text
+namespace MRCH.ImageOp
 {
     /// <summary>
     /// This class provides functionality to fade in `RawImage` or `Image` components over a specified duration.

@@ -3462,9 +3462,8 @@ MonoBehaviour:
           m_StringArgument: You stole the diamond!
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1536692019}
-        m_TargetAssemblyTypeName: MRCH.Content.Common.Scripts.Objects.Text.TmpHelper,
-          Common.Objects
+      - m_Target: {fileID: 1536692023}
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TmpHelper, Runtime
         m_MethodName: ChangeContent
         m_Mode: 5
         m_Arguments:
@@ -3489,9 +3488,8 @@ MonoBehaviour:
   onDistanceEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1536692019}
-        m_TargetAssemblyTypeName: MRCH.Content.Common.Scripts.Objects.Text.TmpHelper,
-          Common.Objects
+      - m_Target: {fileID: 1536692023}
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TmpHelper, Runtime
         m_MethodName: ChangeContent
         m_Mode: 5
         m_Arguments:
@@ -3505,9 +3503,8 @@ MonoBehaviour:
   onDistanceExit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1536692019}
-        m_TargetAssemblyTypeName: MRCH.Content.Common.Scripts.Objects.Text.TmpHelper,
-          Common.Objects
+      - m_Target: {fileID: 1536692023}
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TmpHelper, Runtime
         m_MethodName: ChangeContent
         m_Mode: 5
         m_Arguments:
@@ -5217,8 +5214,8 @@ GameObject:
   - component: {fileID: 1536692018}
   - component: {fileID: 1536692021}
   - component: {fileID: 1536692020}
-  - component: {fileID: 1536692019}
   - component: {fileID: 1536692022}
+  - component: {fileID: 1536692023}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -5245,19 +5242,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0351, y: 1.78}
   m_SizeDelta: {x: 25.4236, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1536692019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1536692017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ade816e86e9045c0ac8894b133d3c0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 1536692020}
 --- !u!114 &1536692020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5425,6 +5409,19 @@ MonoBehaviour:
   minAngleAllowed: 0.3
   maxAngleAllowed: 5
   timeUntilThresholdReachesMaxAngle: 3
+--- !u!114 &1536692023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536692017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4714adcd747446bebb4a5df4bcaf7918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1536692020}
 --- !u!1001 &1548975064
 PrefabInstance:
   m_ObjectHideFlags: 0

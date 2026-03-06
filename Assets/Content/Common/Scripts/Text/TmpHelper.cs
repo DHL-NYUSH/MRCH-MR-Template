@@ -2,14 +2,14 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
-namespace MRCH.Text
+namespace MRCH.TextOp
 {
-    public class TmpHelper : MonoBehaviour
+    public abstract class TmpHelper : MonoBehaviour
     {
         [SerializeField, Required]
         private TMP_Text text;
 
-        public void ChangeContent(string content)
+        public virtual void ChangeContent(string content)
         {
             text.text = content;
         }

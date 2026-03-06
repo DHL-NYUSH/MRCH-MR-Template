@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 
-namespace MRCH.Wrappers
+namespace MRCH.Wrappers.Tasks
 {
     [AddComponentMenu("MRCH/Tasks/Multi Condition Event Manager")]
-    public class MultiConditionEventManager: Tools.Tasks.MultiConditionEventManager
+    public class MultiConditionEventManager: MRCH.Tools.Tasks.MultiConditionEventManager
     {
-        
     }
 }

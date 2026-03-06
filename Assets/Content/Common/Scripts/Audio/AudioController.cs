@@ -1,26 +1,37 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace MRCH.Audio
+namespace MRCH.AudioOp
 {
-//Scripted by Prof. Zhang, modified by Shengyang
+    // Scripted by Prof. Zhang, modified by Shengyang
+
+    [RequireComponent(typeof(AudioSource))]
     public abstract class AudioController : MonoBehaviour
     {
-        [SerializeField, ReadOnly,Title("Component",bold:false)] protected AudioSource audioSource;
+        [SerializeField, ReadOnly, Title("Component", bold: false)]
+        protected AudioSource audioSource;
 
-        [Title("Setting",bold:false),Unit(Units.Second)]public float fadeDuration = 1.0f;
+        [Title("Setting", bold: false), Unit(Units.Second)]
+        public float fadeDuration = 1.0f;
 
-        [SerializeField,PropertyRange(0,1f)] protected float targetVolume = 1.0f;
+        [SerializeField, PropertyRange(0, 1f)]
+        protected float targetVolume = 1.0f;
+
+        private Coroutine _activeFade;
+
+        protected virtual void Reset()
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
 
         protected virtual void Start()
         {
-            TryGetComponent(out audioSource);
-
-            if (audioSource == null)
+            if (!audioSource && TryGetComponent(out _activeFade))
             {
-                Debug.LogWarning(
-                    "No AudioSource found on this GameObject. AudioController requires an AudioSource component.");
+                Debug.LogWarning($"There is no audio source attached to the AudioController of {name}, " +
+                                 $"none of operations on it will be done");
             }
         }
 
@@ -30,7 +41,11 @@ namespace MRCH.Audio
         public virtual void FadeInAudioToTargetVolume()
         {
             if (audioSource)
-                StartCoroutine(FadeInRoutine(fadeDuration, targetVolume));
+                StartFade(FadeRoutine(targetVolume, fadeDuration, onStart: () =>
+                {
+                    if (!audioSource.isPlaying)
+                        audioSource.Play();
+                }));
         }
 
         /// <summary>
@@ -39,8 +54,10 @@ namespace MRCH.Audio
         public virtual void FadeOutAudio()
         {
             if (audioSource)
-                StartCoroutine(FadeOutRoutine(fadeDuration));
-            
+                StartFade(FadeRoutine(0f, fadeDuration, onComplete: () =>
+                {
+                    audioSource.Stop();
+                }));
         }
 
         /// <summary>
@@ -49,71 +66,71 @@ namespace MRCH.Audio
         /// <param name="volume">Target volume value between 0.0 and 1.0</param>
         public virtual void SetVolumeTo(float volume)
         {
-            if (audioSource != null)
-            {
-                // Start fading to the new target volume
-                StartCoroutine(FadeToVolumeRoutine(volume, fadeDuration));
-            }
+            if (audioSource)
+                StartFade(FadeRoutine(volume, fadeDuration));
         }
 
         /// <summary>
-        /// Coroutine to fade in the audio to the target volume.
+        /// Immediately stops any active fade and the audio source.
         /// </summary>
-        protected virtual IEnumerator FadeInRoutine(float duration, float targetVolume)
+        public virtual void StopImmediate()
         {
-            audioSource.volume = 0f; // Start from volume 0
-            audioSource.Play(); // Play the audio
-
-            float startVolume = 0f;
-            float timer = 0f;
-
-            while (timer < duration)
+            StopActiveFade();
+            if (audioSource)
             {
-                timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(startVolume, targetVolume, timer / duration);
-                yield return null; // Wait until the next frame
+                audioSource.Stop();
+                audioSource.volume = 0f;
             }
-
-            audioSource.volume = targetVolume; // Ensure we set to target volume at the end
         }
 
         /// <summary>
-        /// Coroutine to fade out the audio and stop it.
+        /// Unified coroutine to fade the audio volume from its current value to a target.
         /// </summary>
-        protected virtual IEnumerator FadeOutRoutine(float duration)
-        {
-            float startVolume = audioSource.volume;
-            float timer = 0f;
-
-            while (timer < duration)
-            {
-                timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
-                yield return null; // Wait until the next frame
-            }
-
-            audioSource.Stop(); // Stop the audio once faded out
-            audioSource.volume = startVolume; // Reset volume for next play
-        }
-
-        /// <summary>
-        /// Coroutine to gradually change the volume to a target value.
-        /// </summary>
-        /// <param name="volume">Target volume</param>
+        /// <param name="toVolume">Target volume</param>
         /// <param name="duration">Time taken to change the volume</param>
-        protected virtual IEnumerator FadeToVolumeRoutine(float volume, float duration)
+        /// <param name="onStart">Optional callback invoked before the fade begins</param>
+        /// <param name="onComplete">Optional callback invoked after the fade finishes</param>
+        protected virtual IEnumerator FadeRoutine(float toVolume, float duration,
+            Action onStart = null, Action onComplete = null)
         {
-            float startVolume = audioSource.volume;
-            float timer = 0f;
+            onStart?.Invoke();
+
+            var startVolume = audioSource.volume;
+            var timer = 0f;
 
             while (timer < duration)
             {
                 timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(startVolume, volume, timer / duration);
-                yield return null; // Wait until the next frame
+                var t = Mathf.Clamp01(timer / duration);
+                audioSource.volume = Mathf.Lerp(startVolume, toVolume, t);
+                yield return null;
             }
 
-            audioSource.volume = volume; // Ensure it reaches the target volume at the end
+            audioSource.volume = toVolume;
+            _activeFade = null;
+
+            onComplete?.Invoke();
+        }
+
+        /// <summary>
+        /// Starts a new fade, cancelling any currently running fade first.
+        /// </summary>
+        protected virtual void StartFade(IEnumerator routine)
+        {
+            StopActiveFade();
+            _activeFade = StartCoroutine(routine);
+        }
+
+        /// <summary>
+        /// Stops the currently active fade coroutine if one is running.
+        /// </summary>
+        private void StopActiveFade()
+        {
+            if (_activeFade != null)
+            {
+                StopCoroutine(_activeFade);
+                _activeFade = null;
+            }
         }
     }
 }

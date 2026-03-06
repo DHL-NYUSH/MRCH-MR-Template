@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.Tools
 {
     [AddComponentMenu("MRCH/Objects/Object Toolset")]
-    public class ObjectToolset : Tools.Objects.ObjectToolset
+    public class ObjectToolset : MRCH.Tools.Objects.ObjectToolset
     {
     }
 }

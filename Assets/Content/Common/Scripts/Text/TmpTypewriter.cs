@@ -5,7 +5,7 @@ using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.SceneManagement;
 
-namespace MRCH.Text
+namespace MRCH.TextOp
 {
     public abstract class TmpTypewriter : MonoBehaviour
     {

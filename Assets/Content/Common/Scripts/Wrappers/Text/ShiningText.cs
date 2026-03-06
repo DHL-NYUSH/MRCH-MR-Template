@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.TextOp
 {
     [AddComponentMenu("MRCH/Text/Text Shining")]
-    public class ShiningText : Text.ShiningText
+    public class ShiningText : MRCH.TextOp.ShiningText
     {
     }
 }

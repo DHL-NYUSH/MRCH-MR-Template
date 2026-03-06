@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.Tools
 {
     [AddComponentMenu("MRCH/Objects/Keep Facing To Cam")]
-    public class KeepFacingToCam : Tools.Objects.KeepFacingToCam
+    public class KeepFacingToCam : MRCH.Tools.Objects.KeepFacingToCam
     {
     }
 }

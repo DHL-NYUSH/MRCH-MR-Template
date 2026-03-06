@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Wrappers
+namespace MRCH.Wrappers.Tools
 {
     [AddComponentMenu("MRCH/Objects/Move & Rotate")]
-    public class MoveAndRotate : Tools.Objects.MoveAndRotate
+    public class MoveAndRotate : MRCH.Tools.Objects.MoveAndRotate
     {
     }
 }

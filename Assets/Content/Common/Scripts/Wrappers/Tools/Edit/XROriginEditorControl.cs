@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Wrappers
+namespace MRCH.Wrappers.Tools
 {
     [AddComponentMenu("MRCH/Edit/XR Origin Editor Control")]
-    public class XROriginEditorControl : Tools.Edit.XROriginEditorControl
+    public class XROriginEditorControl : MRCH.Tools.Edit.XROriginEditorControl
     {
     }
 }

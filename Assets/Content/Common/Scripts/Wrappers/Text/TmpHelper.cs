@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Wrappers
+namespace MRCH.Wrappers.TextOp
 {
     [AddComponentMenu("MRCH/Text/TextMeshPro Helper")]
-    public class TmpHelper: Text.TmpHelper
+    public class TmpHelper: MRCH.TextOp.TmpHelper
     {
     }
 }
