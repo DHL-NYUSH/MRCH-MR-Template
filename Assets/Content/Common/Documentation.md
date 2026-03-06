@@ -765,7 +765,7 @@ A **Toast** is a small pop-up notification that slides into view, displays a mes
 ##### Animation Offset
 
 - **Type**: `float`
-- **Dessssssssscription**: The Y distance the toast travels during enter and exit animation. The toast enters from below (`restPosition - offset`) and exits upward (`restPosition + offset`).
+- **Description**: The Y distance the toast travels during enter and exit animation. The toast enters from below (`restPosition - offset`) and exits upward (`restPosition + offset`).
 
 ##### Display Duration
 

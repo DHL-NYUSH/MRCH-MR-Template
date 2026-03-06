@@ -12,7 +12,7 @@
 
 v2.0 is a significant rework of the template's architecture, component set, and documentation. The goals were: cleaner Inspector organization, more consistent and beginner-friendly component naming, a richer set of ready-to-use tools, and a fully rewritten documentation that covers every component with accurate, up-to-date descriptions.
 
-> **Migration note**: You are not suggested to do a auto upgrading from 1.x. During the rework, some history variable names was not recorded (via "FormallySerilizedAs"). So, you may lose your progress in the upgrade. 
+> **Migration note**: You are not suggested to do a auto upgrading from 1.x. During the rework, some history variable names was not recorded (via "FormallySerilizedAs"), and asmdef was renamed as well. So, you may lose your progress in the upgrade. 
 
 ---
 

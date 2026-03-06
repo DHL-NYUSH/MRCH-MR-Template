@@ -94,7 +94,15 @@ namespace MRCH.Interact.Touch
                 _refCount = 0;
             }
         }
-
+        
+        protected virtual void OnDestroy()
+        {
+            for (var i = 0; i < 32; i++)
+            {
+                if ((touchableLayer.value & (1 << i)) != 0)
+                    LayerUsed.Remove((uint)i);
+            }
+        }
 
         protected virtual void Update()
         {

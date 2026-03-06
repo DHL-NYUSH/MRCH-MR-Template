@@ -11,6 +11,11 @@ namespace MRCH.TextOp
 
         public virtual void ChangeContent(string content)
         {
+            if (!text)
+            {
+                Debug.LogWarning($"TMP component not found: {gameObject.name}, abort ChangeContent to {content}");
+                return;
+            }
             text.text = content;
         }
     }

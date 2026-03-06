@@ -28,7 +28,7 @@ namespace MRCH.AudioOp
 
         protected virtual void Start()
         {
-            if (!audioSource && TryGetComponent(out _activeFade))
+            if (!audioSource && TryGetComponent(out audioSource))
             {
                 Debug.LogWarning($"There is no audio source attached to the AudioController of {name}, " +
                                  $"none of operations on it will be done");

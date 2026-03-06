@@ -73,3 +73,4 @@ crashlytics-build.properties
 /.idea
 Assets/Content/.DS_Store
 .DS_Store
+/.claude/worktrees
