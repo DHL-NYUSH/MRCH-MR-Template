@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.AudioOp
 {
-    [AddComponentMenu("MRCH-Interact/Audio/Audio Controller")]
-    public class AudioController : MRCH.Common.Interact.AudioController
+    [AddComponentMenu("MRCH/Audio/Audio Controller")]
+    public class AudioController : MRCH.AudioOp.AudioController
     {
     }
 }

@@ -4,7 +4,7 @@ using Immersal.XR;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace MRCH.Common.Bridge
+namespace MRCH.Bridge
 {
     [AddComponentMenu("")]
     public abstract class EventBroadcaster : MonoBehaviour

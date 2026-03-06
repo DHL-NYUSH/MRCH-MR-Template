@@ -1,8 +1,9 @@
-
 using UnityEngine;
 
-[AddComponentMenu("MRCH-Interact/Tool/Toast Manager")]
-public class ToastManager : MRCH.Common.Toast.ToastManager
+namespace MRCH.Wrappers.Toast
 {
-
+    [AddComponentMenu("MRCH/Toast/Toast Manager")]
+    public class ToastManager : MRCH.Toast.ToastManager
+    {
+    }
 }

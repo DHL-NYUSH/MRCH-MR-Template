@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.ImageOp
 {
-    [AddComponentMenu("MRCH-Interact/Image/Image Fade")]
-    public class ImageFade : MRCH.Common.Interact.ImageFade
+    [AddComponentMenu("MRCH/Image/Image Fade")]
+    public class ImageFade : MRCH.ImageOp.ImageFade
     {
     }
 }

@@ -1,11 +1,11 @@
 using DG.Tweening;
-using MRCH.Common.Toast.Interface;
+using MRCH.Toast.Interface;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-namespace MRCH.Common.Toast
+namespace MRCH.Toast
 {
     /// <summary>
     /// Manages a single reusable toast notification in an Overlay Canvas.

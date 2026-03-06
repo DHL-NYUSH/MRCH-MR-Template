@@ -1,10 +1,9 @@
 using UnityEngine;
 
-namespace MRCH.Common.Wrappers
+namespace MRCH.Wrappers.TextOp
 {
-    [AddComponentMenu("MRCH-Interact/Text/Text Fade")]
-    public class TextFade : MRCH.Common.Interact.TextFade
+    [AddComponentMenu("MRCH/Text/Text Fade")]
+    public class TextFade : MRCH.TextOp.TextFade
     {
-
     }
 }
