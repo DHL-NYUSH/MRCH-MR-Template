@@ -1,4 +1,7 @@
-﻿using MRCH.Toast.Interface;
+﻿// Copyright (c) 2026 Digital Heritage Lab / Shengyang "Billiton" Peng
+// Licensed under the MIT License. See LICENSE for details.
+
+using MRCH.Toast.Interface;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;

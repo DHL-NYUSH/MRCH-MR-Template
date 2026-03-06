@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Digital Heritage Lab / Shengyang "Billiton" Peng
+// Licensed under the MIT License. See LICENSE for details.
+
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
