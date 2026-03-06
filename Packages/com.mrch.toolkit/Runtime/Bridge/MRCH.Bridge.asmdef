@@ -1,0 +1,16 @@
+{
+    "name": "Bridge",
+    "rootNamespace": "MRCH",
+    "references": [
+        "GUID:2e7d06324bb40437f864b52eb770c3c5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,22 @@
+{
+    "name": "Runtime",
+    "rootNamespace": "MRCH",
+    "references": [
+        "Unity.TextMeshPro",
+        "Unity.Mathematics",
+        "UniTask",
+        "Immersal.Core",
+        "Unity.InputSystem",
+        "DOTween.Modules",
+        "Bridge"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

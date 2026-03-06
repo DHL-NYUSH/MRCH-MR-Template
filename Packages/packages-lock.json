@@ -7,17 +7,6 @@
       "dependencies": {},
       "hash": "a9e27c03d411d2fca01cc7410c24c97cd77cb539"
     },
-    "com.digitalheritagelab.mrch": {
-      "version": "file:com.digitalheritagelab.mrch",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-        "com.unity.ugui": "2.0.0",
-        "com.unity.inputsystem": "1.0.0",
-        "com.immersal.core": "https://github.com/immersal/imdk-unity.git"
-      }
-    },
     "com.immersal.core": {
       "version": "https://github.com/immersal/imdk-unity.git",
       "depth": 0,
@@ -35,6 +24,17 @@
         "com.unity.ai.navigation": "1.1.7"
       },
       "hash": "5b0f144e2350bd3cfd755f551ae4085d25d3ff94"
+    },
+    "com.mrch.toolkit": {
+      "version": "file:com.mrch.toolkit",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+        "com.unity.ugui": "2.0.0",
+        "com.unity.inputsystem": "1.0.0",
+        "com.immersal.core": "https://github.com/immersal/imdk-unity.git"
+      }
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

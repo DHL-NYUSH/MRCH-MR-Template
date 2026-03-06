@@ -1,0 +1,29 @@
+{
+  "name": "com.mrch.toolkit",
+  "version": "2.0.0",
+  "displayName": "MRCH Toolkit",
+  "description": "A zero-to-low-code toolkit that empowers students to build mixed-reality experiences. Provides Inspector-driven components for interaction triggers, touch input, UI helpers, toast notifications, and object tools.\n\nAuthor: Shengyang \"Billiton\" Peng",
+  "unity": "6000.0",
+  "licensesUrl": "https://github.com/DHL-NYUSH/MRCH-MR-Template/blob/main/LICENSE",
+  "author": {
+    "name": "Digital Heritage Lab",
+    "email": "billy.peng@nyu.edu",
+    "url": "https://www.dhl.shanghai.nyu.edu/"
+  },
+  "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.inputsystem": "1.0.0",
+    "com.immersal.core": "https://github.com/immersal/imdk-unity.git"
+  },
+  "samples": [
+    {
+      "displayName": "MRCH Toolkit Samples",
+      "description": "Samples showcasing how to use the MRCH toolkit",
+      "path": "Samples~"
+    }
+  ],
+  "keywords": ["mrch", "mixed-reality", "ar"],
+  "license": "MIT",
+  "hideInEditor": false
+}

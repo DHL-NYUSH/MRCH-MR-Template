@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Content/Common/Scenes/MapTemplate/Ampier.unity
     guid: e614cf221c095054390c8994b8ca8b64
-  - enabled: 1
+  - enabled: 0
     path: Assets/Content/Common/Scenes/InteractionSample - DHL-Corner.unity
     guid: cbc83998639f03546b1bd843cebbe505
   m_configObjects:
