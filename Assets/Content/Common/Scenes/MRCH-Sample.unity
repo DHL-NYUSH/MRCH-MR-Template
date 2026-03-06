@@ -1623,8 +1623,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 569768476}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.MultiConditionEventManager,
-          MRCH.Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MultiConditionEventManager,
+          Runtime
         m_MethodName: CompleteTask
         m_Mode: 5
         m_Arguments:
@@ -1952,7 +1952,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 512964712}
-          m_TargetAssemblyTypeName: ToastManager, Common
+          m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
           m_MethodName: ShowToast
           m_Mode: 5
           m_Arguments:
@@ -1983,7 +1983,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 512964712}
-          m_TargetAssemblyTypeName: ToastManager, Common
+          m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
           m_MethodName: ShowToast
           m_Mode: 5
           m_Arguments:
@@ -2002,7 +2002,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 512964712}
-          m_TargetAssemblyTypeName: ToastManager, Common
+          m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
           m_MethodName: ShowToast
           m_Mode: 5
           m_Arguments:
@@ -2020,7 +2020,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 512964712}
-        m_TargetAssemblyTypeName: ToastManager, Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
         m_MethodName: ShowToast
         m_Mode: 5
         m_Arguments:
@@ -2135,7 +2135,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 32410541}
-        m_TargetAssemblyTypeName: SimpleTmpTypewriter, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TextOp.TmpTypewriter, Runtime
         m_MethodName: StartTyping
         m_Mode: 1
         m_Arguments:
@@ -2150,7 +2150,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 32410537}
-        m_TargetAssemblyTypeName: MoveAndRotate, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MoveAndRotate, Runtime
         m_MethodName: MoveForthAndBack
         m_Mode: 1
         m_Arguments:
@@ -2162,7 +2162,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 32410537}
-        m_TargetAssemblyTypeName: MoveAndRotate, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MoveAndRotate, Runtime
         m_MethodName: RotateObject
         m_Mode: 1
         m_Arguments:
@@ -2173,23 +2173,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onTriggerExit:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 32410537}
-        m_TargetAssemblyTypeName: MoveAndRotate, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MoveAndRotate, Runtime
         m_MethodName: MoveBackForOnce
         m_Mode: 1
         m_Arguments:
@@ -2201,7 +2189,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 32410537}
-        m_TargetAssemblyTypeName: MoveAndRotate, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MoveAndRotate, Runtime
         m_MethodName: StopRotation
         m_Mode: 1
         m_Arguments:
@@ -2571,8 +2559,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 569768476}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.MultiConditionEventManager,
-          MRCH.Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MultiConditionEventManager,
+          Runtime
         m_MethodName: CompleteTask
         m_Mode: 5
         m_Arguments:
@@ -2769,7 +2757,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2095859091}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.UnityEventLibrary, Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Interact.Events.UnityEventLibrary,
+          Runtime
         m_MethodName: TriggerSequenceByName
         m_Mode: 5
         m_Arguments:
@@ -2781,7 +2770,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 635229009}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.TouchManager, Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Interact.Touch.TouchManager, Runtime
         m_MethodName: Lock
         m_Mode: 1
         m_Arguments:
@@ -3451,7 +3440,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 512964712}
-        m_TargetAssemblyTypeName: ToastManager, Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
         m_MethodName: ShowToast
         m_Mode: 5
         m_Arguments:
@@ -3489,7 +3478,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1536692023}
-        m_TargetAssemblyTypeName: MRCH.Wrappers.TmpHelper, Runtime
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TextOp.TmpHelper, Runtime
         m_MethodName: ChangeContent
         m_Mode: 5
         m_Arguments:
@@ -3504,7 +3493,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1536692023}
-        m_TargetAssemblyTypeName: MRCH.Wrappers.TmpHelper, Runtime
+        m_TargetAssemblyTypeName: MRCH.Wrappers.TextOp.TmpHelper, Runtime
         m_MethodName: ChangeContent
         m_Mode: 5
         m_Arguments:
@@ -4528,7 +4517,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1220436274}
-        m_TargetAssemblyTypeName: ObjectToolset, MRCH.Common.Objects
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.ObjectToolset, Runtime
         m_MethodName: ToggleObjectEnabled
         m_Mode: 2
         m_Arguments:
@@ -4540,8 +4529,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 569768476}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.MultiConditionEventManager,
-          MRCH.Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Tools.MultiConditionEventManager,
+          Runtime
         m_MethodName: CompleteTask
         m_Mode: 5
         m_Arguments:
@@ -6616,7 +6605,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1706373801}
-        m_TargetAssemblyTypeName: MRCH.Common.Wrappers.TouchManager, Common
+        m_TargetAssemblyTypeName: MRCH.Wrappers.Interact.Touch.TouchManager, Runtime
         m_MethodName: Unlock
         m_Mode: 1
         m_Arguments:
@@ -7609,7 +7598,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 512964712}
-            m_TargetAssemblyTypeName: ToastManager, Common
+            m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
             m_MethodName: ShowToast
             m_Mode: 5
             m_Arguments:
@@ -7638,7 +7627,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 512964712}
-            m_TargetAssemblyTypeName: ToastManager, Common
+            m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
             m_MethodName: ShowToast
             m_Mode: 5
             m_Arguments:
@@ -7667,7 +7656,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 512964712}
-            m_TargetAssemblyTypeName: ToastManager, Common
+            m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
             m_MethodName: ShowToast
             m_Mode: 5
             m_Arguments:
@@ -7696,7 +7685,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 512964712}
-            m_TargetAssemblyTypeName: ToastManager, Common
+            m_TargetAssemblyTypeName: MRCH.Wrappers.Toast.ToastManager, Runtime
             m_MethodName: ShowToast
             m_Mode: 5
             m_Arguments:
@@ -7725,7 +7714,8 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 635229009}
-            m_TargetAssemblyTypeName: MRCH.Common.Wrappers.TouchManager, Common
+            m_TargetAssemblyTypeName: MRCH.Wrappers.Interact.Touch.TouchManager,
+              Runtime
             m_MethodName: Unlock
             m_Mode: 1
             m_Arguments:

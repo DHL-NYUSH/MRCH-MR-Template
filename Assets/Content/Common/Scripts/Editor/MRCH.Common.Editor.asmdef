@@ -2,7 +2,7 @@
     "name": "Editor",
     "rootNamespace": "MRCH",
     "references": [
-        "Common"
+        "Runtime"
     ],
     "includePlatforms": [
         "Editor"
