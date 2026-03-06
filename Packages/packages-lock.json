@@ -7,6 +7,17 @@
       "dependencies": {},
       "hash": "a9e27c03d411d2fca01cc7410c24c97cd77cb539"
     },
+    "com.digitalheritagelab.mrch": {
+      "version": "file:com.digitalheritagelab.mrch",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+        "com.unity.ugui": "2.0.0",
+        "com.unity.inputsystem": "1.0.0",
+        "com.immersal.core": "https://github.com/immersal/imdk-unity.git"
+      }
+    },
     "com.immersal.core": {
       "version": "https://github.com/immersal/imdk-unity.git",
       "depth": 0,
