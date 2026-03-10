@@ -1,31 +1,17 @@
 // Copyright (c) 2026 Digital Heritage Lab / Shengyang "Billiton" Peng
 // Licensed under the MIT License. See LICENSE for details.
 
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace MRCH.Tools.Edit
 {
-    [AddComponentMenu("MRCH/Edit/Map Model")]
+    /// <summary>
+    /// Marker component that flags this GameObject as an editor-only map reference model.
+    /// The GameObject will be automatically stripped before build by <see cref="MRCH.Editor.MapModelBuildPreprocessor"/>.
+    /// </summary>
+    [AddComponentMenu("MRCH/Edit/Map Model"), HideMonoScript]
     public class MapModel : MonoBehaviour
     {
-        void Awake()
-        {
-#if !UNITY_EDITOR
-            // Disable the GameObject and its children for builds
-            gameObject.SetActive(false);
-#endif
-        }
-
-#if UNITY_EDITOR
-        void OnValidate()
-        {
-            // Ensure this GameObject and its children are hidden in the Editor, but don't save them in builds
-            gameObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.DontSaveInBuild;
-            foreach (Transform child in transform)
-            {
-                child.gameObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.DontSaveInBuild;
-            }
-        }
-#endif
     }
 }
