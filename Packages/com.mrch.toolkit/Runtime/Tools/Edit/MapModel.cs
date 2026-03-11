@@ -8,10 +8,16 @@ namespace MRCH.Tools.Edit
 {
     /// <summary>
     /// Marker component that flags this GameObject as an editor-only map reference model.
-    /// The GameObject will be automatically stripped before build by <see cref="MRCH.Editor.MapModelBuildPreprocessor"/>.
+    /// Automatically assigns the "EditorOnly" tag, which tells Unity to strip this GameObject from builds.
+    /// The object remains in the scene during editing and is excluded from built packages without any build callbacks.
     /// </summary>
     [AddComponentMenu("MRCH/Edit/Map Model"), HideMonoScript]
     public class MapModel : MonoBehaviour
     {
+        private void OnValidate()
+        {
+            if (!gameObject.CompareTag("EditorOnly"))
+                gameObject.tag = "EditorOnly";
+        }
     }
 }
